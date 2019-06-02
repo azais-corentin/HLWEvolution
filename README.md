@@ -1,2 +1,2 @@
-# HLWEvolution
-Hero Line Wars Evolution is a hero defense map for Warcraft 3
+# HLW Evolution
+HLW Evolution - A Warcrat III Hero Defense map
