@@ -1,0 +1,15 @@
+package IncomeTimer
+
+import Timer
+import TimerDialog
+
+import Initialization
+
+@earlyinit function initIncomeTimer()
+    CreateTimer()
+    ..startPeriodic(5, () -> incomePeriodic())
+    .createTimerDialog()
+    ..setTitle("Income")
+
+function incomePeriodic()
+    print("Idk man")
