@@ -1,0 +1,76 @@
+package IncomeBoard
+
+import ClosureEvents
+import Initialization
+import Players
+import Teams
+import IncomeValues
+
+constant multiboard incomeBoard = CreateMultiboard()
+
+@lastinit function initIncomeBoard()
+    incomeBoard
+    ..setColumnCount(4)
+    ..setTitle("Incomes & lives")
+
+    onBoardResize()
+
+    // Columns
+    incomeBoard.getItem(0, 0).setValue("Name")
+    incomeBoard.getItem(0, 1).setValue("Gold")
+    incomeBoard.getItem(0, 2).setValue("Lumber")
+    incomeBoard.getItem(0, 3).setValue("Lives")
+
+    // Team 1 name & lives
+    incomeBoard.getItem(1, 0)
+    ..setValue("Hero Line 1")..setValueColor(T1Color)
+    incomeBoard.getItem(1, 3)
+    ..setValue("100")
+
+    // Set style
+    for i = 0 to incomeBoard.getRowCount()
+        incomeBoard.getItem(i, 0)..setStyle(true, false)..setWidth(0.10)
+        incomeBoard.getItem(i, 1)..setStyle(true, false)..setWidth(0.08)
+        incomeBoard.getItem(i, 2)..setStyle(true, false)..setWidth(0.08)
+        incomeBoard.getItem(i, 3)..setStyle(true, false)..setWidth(0.03)
+
+    incomeBoard..display(false)..display(true)
+
+    // Update board when someone leaves
+    EventListener.add(EVENT_PLAYER_LEAVE) ->
+        onBoardResize()
+
+function onBoardResize()
+    incomeBoard
+    ..setRowCount(TotalPlayers + 3)
+
+    // Team names
+    incomeBoard.getItem(2 + T1Players, 0)
+    ..setValue("Hero Line 2")..setValueColor(T2Color)
+    incomeBoard.getItem(2 + T1Players, 3)
+    ..setValue("100") // TODO Replace "100" with the value
+
+    // Player names & income
+    var i = 0
+    for p in ALL_PLAYERS
+        let inc = playerIncome.get(p)
+        var row = 2 + i + p.getTeam()
+
+        // Name
+        incomeBoard.getItem(row, 0)..setValue(p.getNameColored())
+        // Income gold
+        incomeBoard.getItem(row, 1)..setValue(inc.gold.toString())
+        // Income lumber
+        incomeBoard.getItem(row, 2)..setValue(inc.lumber.toString())
+        
+        i++
+
+    // Income & lives
+    incomeBoard..display(false)..display(true)
+
+
+// Update incomeBoard's values
+public function onBoardIncome()
+
+// Update incomeBoard's lives
+public function onBoardLives()

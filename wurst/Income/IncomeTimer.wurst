@@ -2,14 +2,28 @@ package IncomeTimer
 
 import Timer
 import TimerDialog
+import Player
 
 import Initialization
+import IncomeValues
 
 @earlyinit function initIncomeTimer()
+    // Create 5s timer
     CreateTimer()
     ..startPeriodic(5, () -> incomePeriodic())
+    // Create dialog for it
     .createTimerDialog()
     ..setTitle("Income")
 
 function incomePeriodic()
-    print("Idk man")
+    teamIncome[0] = new Income()
+    teamIncome[1] = new Income()
+
+    //1. Add income to players & calculate team income
+    for p in playerIncome
+        let income = playerIncome.get(p)
+        p.addGold(income.gold)
+        p.addLumber(income.lumber)
+
+        let team = p.getTeam()
+        teamIncome[team] += income
