@@ -1,0 +1,8 @@
+---
+projectName: HLWEvolution
+dependencies:
+- https://github.com/wurstscript/wurstStdlib2
+- https://github.com/frotty/frentity
+buildMapData:
+  fileName: HLWEvolution
+  author: HLWEvolution

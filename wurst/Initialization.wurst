@@ -1,0 +1,13 @@
+package Initialization
+
+import ClosureTimers
+
+// Called right after the map has started
+@annotation public function earlyinit()
+// Called after the map is initialized
+@annotation public function lateinit()
+
+init
+    callFunctionsWithAnnotation("@earlyinit")
+    doAfter(0.1) ->
+        callFunctionsWithAnnotation("@lateinit")
