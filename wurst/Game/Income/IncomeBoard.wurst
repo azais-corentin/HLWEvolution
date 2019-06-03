@@ -5,6 +5,7 @@ import Initialization
 import Players
 import Teams
 import IncomeValues
+import Lives
 
 constant multiboard incomeBoard = CreateMultiboard()
 
@@ -23,7 +24,7 @@ constant multiboard incomeBoard = CreateMultiboard()
 
     // Team 1 name & lives
     incomeBoard.getItem(1, 0)
-    ..setValue("Hero Line 1")..setValueColor(T1Color)
+    ..setValue("Hero Line 1")..setValueColor(teams[0].color)
     incomeBoard.getItem(1, 3)
     ..setValue("100")
 
@@ -42,19 +43,19 @@ constant multiboard incomeBoard = CreateMultiboard()
 
 function onBoardResize()
     incomeBoard
-    ..setRowCount(TotalPlayers + 3)
+    ..setRowCount(totalPlayers + 3)
 
     // Team names
-    incomeBoard.getItem(2 + T1Players, 0)
-    ..setValue("Hero Line 2")..setValueColor(T2Color)
-    incomeBoard.getItem(2 + T1Players, 3)
-    ..setValue("100") // TODO Replace "100" with the value
+    incomeBoard.getItem(2 + teams[0].count, 0)
+    ..setValue("Hero Line 2")..setValueColor(teams[1].color)
+    incomeBoard.getItem(2 + teams[0].count, 3)
+    ..setValue(lives[1].toString())
 
-    // Player names & income
-    var i = 0
+    // Player names & incomes
     for p in ALL_PLAYERS
         let inc = playerIncome.get(p)
-        var row = 2 + i + p.getTeam()
+        //var row = 2 + i + p.getTeam()
+        let row = 2 + p.getId() + p.getTeam()
 
         // Name
         incomeBoard.getItem(row, 0)..setValue(p.getNameColored())
@@ -62,15 +63,26 @@ function onBoardResize()
         incomeBoard.getItem(row, 1)..setValue(inc.gold.toString())
         // Income lumber
         incomeBoard.getItem(row, 2)..setValue(inc.lumber.toString())
-        
-        i++
 
-    // Income & lives
+    // Refresh board
     incomeBoard..display(false)..display(true)
 
+// Update incomeBoard's income values
+public function updateIncome(player p)
+    let inc = playerIncome.get(p)
+    var row = 2 + p.getId() + p.getTeam()
 
-// Update incomeBoard's values
-public function onBoardIncome()
+    // Income gold
+    incomeBoard.getItem(row, 1)..setValue(inc.gold.toString())
+    // Income lumber
+    incomeBoard.getItem(row, 2)..setValue(inc.lumber.toString())
 
-// Update incomeBoard's lives
-public function onBoardLives()
+
+// Update incomeBoard's lives count
+public function updateLives()
+    // T1 lives
+    incomeBoard.getItem(1, 3)
+    .setValue(lives[0].toString())
+    // T2 lives
+    incomeBoard.getItem(2 + teams[0].count, 3)
+    .setValue(lives[1].toString())

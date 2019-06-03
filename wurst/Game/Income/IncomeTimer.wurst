@@ -1,9 +1,5 @@
 package IncomeTimer
 
-import Timer
-import TimerDialog
-import Player
-
 import Initialization
 import IncomeValues
 

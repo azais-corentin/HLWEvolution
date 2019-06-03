@@ -33,11 +33,13 @@ public class Income
 public constant playerIncome = new IterableMap<player, Income>
 public Income array[2] teamIncome = [new Income(), new Income()]
 
+@compiletime function initIncomeValuesEvents()
+    // Keep the list up to date
+    // TODO Test if this works
+    EventListener.add(EVENT_PLAYER_LEAVE) ->
+        playerIncome.remove(GetTriggerPlayer())
+
 @lateinit function initIncomeValues()
     // Default income to 20 gold
     for player p in ALL_PLAYERS
         playerIncome.put(p, new Income(20))
-
-    // Keep the list up to date
-    EventListener.add(EVENT_PLAYER_LEAVE) ->
-        playerIncome.remove(GetTriggerPlayer())
