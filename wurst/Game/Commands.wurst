@@ -4,9 +4,20 @@ import StringUtils
 import ClosureEvents
 import LinkedList
 
+import Initialization
+import IncomeValues
+import IncomeBoard
+
 let MSG_DURATION = 10.
 
-init
+public bool DBG_MODE = false
+
+public string commandHelp = compiletime(
+    "help: Shows the list of commands ingame\n\n" +
+    "zoom x or cam x: Sets the camera zoom (between 50 and 220)\n\n"
+    )
+
+@loadinit function initChatEvent() 
     EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
         var str = GetEventPlayerChatString()
         if str.startsWith("-")
@@ -17,14 +28,27 @@ function parseCommand(string str)
 
     LinkedList<string> args = str.substring(1).split(" ")
 
-    var cmd = args.get(0)
+    let cmd = args.get(0)
 
     switch cmd
         case "help"
-            p.print("List of commands:\n\n" + commandHelp(), MSG_DURATION)
+            p.print("List of commands:\n\n" + commandHelp, MSG_DURATION)
+        case "dbg"
+            DBG_MODE =true
+            print("Debug mode enabled!")
+        case "income"
+            let which = args.get(1)
+            let value = args.get(2).toInt()
+            if which != null
+                switch which
+                    case "g"
+                        playerIncome.get(p).gold += value
+                    case "l"
+                        playerIncome.get(p).lumber += value
+                updateIncome(p)
         case "zoom" | "cam"
             var zstr = args.get(1)
-            if(zstr != null)
+            if zstr != null
                 var zoom = zstr.toInt()
                 
                 // Minimum zoom
@@ -40,7 +64,3 @@ function parseCommand(string str)
 
         default
             p.print("Unknown command", MSG_DURATION)
-
-@compiletime public function commandHelp() returns string
-    return "help: Shows the list of commands ingame\n\n" +
-    "zoom x or cam x: Sets the camera zoom (between 50 and 220)\n\n"
