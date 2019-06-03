@@ -14,7 +14,7 @@ constant multiboard incomeBoard = CreateMultiboard()
     ..setColumnCount(4)
     ..setTitle("Incomes & lives")
 
-    onBoardResize()
+    updateBoardSize()
 
     // Columns
     incomeBoard.getItem(0, 0).setValue("Name")
@@ -31,21 +31,25 @@ constant multiboard incomeBoard = CreateMultiboard()
     // Set style
     for i = 0 to incomeBoard.getRowCount()
         incomeBoard.getItem(i, 0)..setStyle(true, false)..setWidth(0.10)
-        incomeBoard.getItem(i, 1)..setStyle(true, false)..setWidth(0.08)
-        incomeBoard.getItem(i, 2)..setStyle(true, false)..setWidth(0.08)
+        incomeBoard.getItem(i, 1)..setStyle(true, false)..setWidth(0.06)
+        incomeBoard.getItem(i, 2)..setStyle(true, false)..setWidth(0.06)
         incomeBoard.getItem(i, 3)..setStyle(true, false)..setWidth(0.03)
+
+        // Set icons
+        incomeBoard.getItem(0, 1)..setStyle(false, true)..setIcon("ReplaceableTextures\\CommandButtons\\BTNGoldMine.blp")
+        incomeBoard.getItem(0, 2)..setStyle(false, true)..setIcon("ReplaceableTextures\\CommandButtons\\BTNBundleOfLumber.blp")
 
     incomeBoard..display(false)..display(true)
 
     // Update board when someone leaves
     EventListener.add(EVENT_PLAYER_LEAVE) ->
-        onBoardResize()
+        updateBoardSize()
 
-function onBoardResize()
+function updateBoardSize()
     incomeBoard
     ..setRowCount(totalPlayers + 3)
 
-    // Team names
+    // Team 2's name
     incomeBoard.getItem(2 + teams[0].count, 0)
     ..setValue("Hero Line 2")..setValueColor(teams[1].color)
     incomeBoard.getItem(2 + teams[0].count, 3)

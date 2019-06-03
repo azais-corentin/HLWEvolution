@@ -2,6 +2,8 @@ package Initialization
 
 import ClosureTimers
 
+// Called during loading
+@annotation public function loadinit()
 // Called right after the map has started
 @annotation public function earlyinit()
 // Called after the map is initialized
@@ -10,6 +12,7 @@ import ClosureTimers
 @annotation public function lastinit()
 
 init
+    callFunctionsWithAnnotation("@loadinit")
     // Ensures this is called after map start
     // in case a player crashes while loading
     nullTimer() ->

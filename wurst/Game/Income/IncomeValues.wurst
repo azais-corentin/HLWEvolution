@@ -23,6 +23,10 @@ public class Income
         this.gold = gold
         this.lumber = lumber
     
+    function reset()
+        this.gold = 0
+        this.lumber = 0
+    
     function op_plus(Income i) returns Income
         return new Income(this.gold + i.gold, this.lumber + i.lumber)
     
@@ -31,11 +35,10 @@ public class Income
 
 // Stores players income
 public constant playerIncome = new IterableMap<player, Income>
-public Income array[2] teamIncome = [new Income(), new Income()]
+public constant Income array[2] teamIncome = [new Income(), new Income()]
 
 @compiletime function initIncomeValuesEvents()
     // Keep the list up to date
-    // TODO Test if this works
     EventListener.add(EVENT_PLAYER_LEAVE) ->
         playerIncome.remove(GetTriggerPlayer())
 
