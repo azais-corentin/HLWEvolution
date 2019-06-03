@@ -1,0 +1,55 @@
+package UnitToolTipGen
+
+import public UnitObjEditing
+import ObjEditingNatives
+
+public interface UnitTooltipGenerator
+    function addProperty(string title, StringLevelClosure lc)
+    function applyToDef(UnitOrBuildingOrHeroDefinition def)
+
+public class UnitOrBuildingOrHeroDefinitionGen extends UnitOrBuildingOrHeroDefinition
+    
+    UnitTooltipGenerator tooltipGen = null
+    boolean listen = false
+
+    construct(int newId, int origId)
+        super(newId, origId)
+    
+    function addTooltipProperty(string pName, StringLevelClosure lc)
+        if tooltipGen != null and listen
+            tooltipGen.addProperty(pName, lc)
+
+    function addTooltipProperty(string pName, IntLevelClosure lc)
+        addTooltipProperty(pName, (int lvl) -> lc.run(lvl).toString())
+
+    function addTooltipProperty(string pName, RealLevelClosure lc)
+        addTooltipProperty(pName, (int lvl) -> lc.run(lvl).toString())
+
+    function addTooltipProperty(string pName, BooleanLevelClosure lc)
+        addTooltipProperty(pName, (int lvl) -> lc.run(lvl).toString())
+    
+    function registerTooltipGenerator(UnitTooltipGenerator tgen)
+        tooltipGen = tgen
+    
+    function tooltipStartListen()
+        listen = true
+
+    function tooltipStopListen()
+        tooltipStopListen(true)
+    
+    function tooltipStopListen(boolean build)
+        listen = false
+        if tooltipGen != null and build
+            tooltipGen.applyToDef(this)
+
+    override function setName(string data)
+        super.setName(data)
+        StringLevelClosure clr = lvl -> data
+        addTooltipProperty("Name", clr)
+    
+    function presetHotkey(string value)
+        super.setHotkey(value)
+        StringLevelClosure clr = lvl -> value
+        addTooltipProperty("Hotkey", clr)
+    
+    
