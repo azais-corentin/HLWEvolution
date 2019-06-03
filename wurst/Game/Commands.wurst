@@ -1,0 +1,46 @@
+package Commands
+
+import StringUtils
+import ClosureEvents
+import LinkedList
+
+let MSG_DURATION = 10.
+
+init
+    EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
+        var str = GetEventPlayerChatString()
+        if str.startsWith("-")
+            parseCommand(str)
+
+function parseCommand(string str)
+    let p = GetTriggerPlayer()
+
+    LinkedList<string> args = str.substring(1).split(" ")
+
+    var cmd = args.get(0)
+
+    switch cmd
+        case "help"
+            p.print("List of commands:\n\n" + commandHelp(), MSG_DURATION)
+        case "zoom" | "cam"
+            var zstr = args.get(1)
+            if(zstr != null)
+                var zoom = zstr.toInt()
+                
+                // Minimum zoom
+                if zoom < 50
+                    zoom = 50
+                    p.print("Minimum zoom is 50", MSG_DURATION)
+                // Maximum zoom
+                else if zoom > 220
+                    zoom = 220
+                    p.print("Maximum zoom is 220", MSG_DURATION)
+
+                SetCameraFieldForPlayer(p, CAMERA_FIELD_TARGET_DISTANCE, 16.5 * zoom, 0.3)
+
+        default
+            p.print("Unknown command", MSG_DURATION)
+
+@compiletime public function commandHelp() returns string
+    return "help: Shows the list of commands ingame\n\n" +
+    "zoom x or cam x: Sets the camera zoom (between 50 and 220)\n\n"
