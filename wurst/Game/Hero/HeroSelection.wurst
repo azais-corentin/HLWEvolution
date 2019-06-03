@@ -1,0 +1,14 @@
+package HeroSelection
+
+import HashMap
+import Players
+import UnitIds
+
+import Initialization
+
+HashMap<player, unit> heroUnit
+HashMap<player, bool> heroSelected
+
+@lateinit function initHeroSelection()
+    for player p in ALL_PLAYERS
+        heroSelected.put(p, unitFromIndex(UnitIds.peasant))
