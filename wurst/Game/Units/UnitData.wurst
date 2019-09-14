@@ -1,0 +1,67 @@
+package UnitData
+
+import Money
+import MathsRound
+
+@configurable public constant real priceC1 = 1.4
+@configurable public constant real priceC2 = 4
+
+@configurable public constant real incomeC1 = 0.85
+@configurable public constant real incomeC2 = 3
+
+@configurable public constant real damageC1 = 1.35
+@configurable public constant real damageC2 = -1
+
+@configurable public constant real hpC1 = 100
+@configurable public constant real hpC2 = 1.246076 // = exp(0.22)
+
+@configurable public constant real armorC1 = 5
+@configurable public constant real armorC2 = 1.150274 // = exp(0.14)
+
+tuple MonsterData(int goldCost, int lumberCost, 
+                  int goldIncome, int lumberIncome, 
+                  int damage, int armor, int hp)
+
+public MonsterData array[40] monsterData
+
+function price(int id, int lastPrice) returns int
+    return (lastPrice * priceC1 + id * priceC2).toInt()
+
+function income(integer price) returns int
+    return (Pow(price.toReal(), incomeC1) / incomeC2).toInt()
+
+function damage(int id, int lastDamage) returns int
+    return (lastDamage * damageC1 + id * damageC2).toInt()
+
+function hp(int id) returns int
+    return (hpC1 * Pow(hpC2, id.toReal())).toInt()
+
+function armor(int id) returns int
+    return (armorC1 * Pow(armorC2, id.toReal())).toInt()
+
+@compiletime function initMonsterData()
+    var lastPrice = 5
+    var lastDamage = 20
+    let multiple = 5
+    
+    // Manualyl input the first monster
+    monsterData[0] = MonsterData(5, 0, 1, 0, 20, 100, 5)
+
+    for id = 1 to 39
+        let newPriceAmount = roundNearest(price(id, lastPrice).toReal(),
+                                          multiple)
+        let newIncomeAmount = income(newPriceAmount)
+        
+        let newPrice = new Money(newPriceAmount)
+        let newIncome = new Money(newIncomeAmount)
+
+        let newDamage = damage(id, lastDamage)
+        let newHp = hp(id)
+        let newArmor = armor(id)
+
+        monsterData[id] = MonsterData(newPrice.gold, newPrice.lumber,
+                                      newIncome.gold, newIncome.lumber,
+                                      newDamage, newHp, newArmor)
+
+        lastPrice = newPriceAmount
+        lastDamage = newDamage

@@ -3,15 +3,18 @@ package MonsterToolTip
 import public AbilityObjEditing
 import HashMap
 
-@configurable constant TITLE_COLOR = "|cff3B97D3"
-@configurable constant MAX_TITLES = 10
-@configurable constant NORMAL_ACTIVE_PATTERN = "$name$ [|cffFFCC00$hotkey$|r]"
+import public UnitTooltipGenerator
 
-public class MonsterToolTipGenerator implements TooltipGenerator
-	private constant propMap = new IterableMap<string, StringLevelClosure>
+@configurable public constant TITLE_COLOR = "|cffffffff"
+
+constant BASIC_PATTERN = "$name$ [" + COLOR_GOLD.toColorString() + "$hotkey$|r]"
+
+public class MonsterToolTipGenerator implements UnitTooltipGenerator
+	private constant propMap = new IterableMap<string, string>
 	private var description = ""
 
-	private var levels = 1
+    private var incomegold = ""
+    private var incomelumber = ""
 	private var hotkey = ""
 	private var name = ""
 
@@ -20,28 +23,39 @@ public class MonsterToolTipGenerator implements TooltipGenerator
 
 	construct()
 
-	override function addProperty(string title, StringLevelClosure lc)
+	override function addProperty(string title, string lc)
 		propMap.put(title, lc)
 
-	override function applyToDef(AbilityDefinition def)
-		levels = propMap.has("Levels") ? fixValue(propMap.getAndRemove("Levels").run(0)).toInt() : 1
-		name = propMap.has("Name") ? propMap.getAndRemove("Name").run(0) : "unnamed"
-		hotkey = propMap.has("Hotkey") ? propMap.getAndRemove("Hotkey").run(0) : "Q"
-		def..setTooltipLearn(generateTooltipLearn())
-		..setTooltipLearnExtended(generateTooltipExtended(-1, true))
-		for i = 1 to levels
-			def..setTooltipNormal(i, generateTooltipNormal(i))
-			..setTooltipNormalExtended(i, generateTooltipExtended(i, false))
+	override function applyToDef(UnitOrBuildingOrHeroDefinition def)
+		name = propMap.has("Name") ? propMap.getAndRemove("Name") : "unnamed"
+        hotkey = propMap.has("Hotkey") ? propMap.getAndRemove("Hotkey") : "?"
+        incomegold = propMap.has("IncomeGold") ? propMap.getAndRemove("IncomeGold") : ""
+        incomelumber = propMap.has("IncomeLumber") ? propMap.getAndRemove("IncomeLumber") : ""
 
-	private function generateTooltip() returns string
-		return replaceRefs(LEARN_PATTERN)
+        def..setTooltipBasic(generateBasicTooltip())
+        ..setTooltipExtended(generateExtendedTooltip())
+
+    function generateBasicTooltip() returns string
+        return replaceRefs(BASIC_PATTERN)
+
+    function generateExtendedTooltip() returns string
+        string pattern = "Income|n"
+        if incomegold != ""
+            pattern += "    $income.gold$ gold|n"
+        if incomelumber != ""
+            pattern += "    $income.lumber$ lumber"
+
+        return replaceRefs(pattern)
 
 	private function replaceRefs(string old) returns string
 		var newString = old
 		newString = newString.replace("$name$", name)
-		newString = newString.replace("$hotkey$", hotkey.toUpperCase())
+        newString = newString.replace("$hotkey$", hotkey.toUpperCase())
+        newString = newString.replace("$income.gold$", incomegold)
+        newString = newString.replace("$income.lumber$", incomelumber)
 		return newString
 
+    /*
 	private function generateTooltipExtended(int lvl, boolean learn) returns string
 		var s = ""
 		if targettype == Targettype.PASSIVE
@@ -91,4 +105,5 @@ public class MonsterToolTipGenerator implements TooltipGenerator
 			_newString = oldString.substring(0, charPos[lvl-2]) + "|cffFFCC00" + oldString.substring(charPos[lvl-2], oldString.length()) + "|r"
 		else
 			_newString = oldString.substring(0, charPos[lvl-2]) + "|cffFFCC00" + oldString.substring(charPos[lvl-2], charPos[lvl-1]) + "|r" + oldString.substring(charPos[lvl-1], oldString.length())
-		return _newString
+        return _newString
+    */

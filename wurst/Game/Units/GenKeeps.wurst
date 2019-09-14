@@ -1,0 +1,17 @@
+package GenKeeps
+
+import ObjectIdGenerator
+import UnitIds
+import ObjectIds
+
+import KeepDefinition
+
+public constant BEGINNER_KEEP_ID     = compiletime(UNIT_ID_GEN.next())
+public constant INTERMEDIATE_KEEP_ID = compiletime(UNIT_ID_GEN.next())
+public constant ADVANCED_KEEP_ID     = compiletime(UNIT_ID_GEN.next())
+public constant EXPERT_KEEP_ID       = compiletime(UNIT_ID_GEN.next())
+
+@compiletime function genKeepBeginner()
+    new KeepDefinition(BEGINNER_KEEP_ID, UnitIds.townhall)
+    ..setName("Beginner keep")
+    ..setUpgradesTo(INTERMEDIATE_KEEP_ID.toRawCode())

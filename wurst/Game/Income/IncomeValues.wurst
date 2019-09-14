@@ -5,37 +5,11 @@ import HashMap
 import ClosureEvents
 
 import Initialization
-
-// Define an income type
-public class Income
-    integer gold
-    integer lumber
-
-    construct()
-        this.gold = 0
-        this.lumber = 0
-
-    construct(integer gold)
-        this.gold = gold
-        this.lumber = 0
-
-    construct(integer gold, integer lumber)
-        this.gold = gold
-        this.lumber = lumber
-    
-    function reset()
-        this.gold = 0
-        this.lumber = 0
-    
-    function op_plus(Income i) returns Income
-        return new Income(this.gold + i.gold, this.lumber + i.lumber)
-    
-    function op_minus(Income i) returns Income
-        return new Income(this.gold - i.gold, this.lumber - i.lumber)
+import Money
 
 // Stores players income
-public constant playerIncome = new IterableMap<player, Income>
-public constant Income array[2] teamIncome = [new Income(), new Income()]
+public constant playerIncome = new IterableMap<player, Money>
+public constant Money array[2] teamIncome = [new Money(), new Money()]
 
 @compiletime function initIncomeValuesEvents()
     // Keep the list up to date
@@ -45,4 +19,4 @@ public constant Income array[2] teamIncome = [new Income(), new Income()]
 @lateinit function initIncomeValues()
     // Default income to 20 gold
     for player p in ALL_PLAYERS
-        playerIncome.put(p, new Income(20))
+        playerIncome.put(p, new Money(20, 0))

@@ -1,0 +1,20 @@
+package MonsterDefinition
+
+import Money
+import UnitTooltipGenerator
+
+public class MonsterDefinition extends UnitDefinitionGen
+    Money income = new Money()
+
+    construct(int newId, int origId, UnitTooltipGenerator tgen)
+        super(newId, origId, tgen)
+
+    function setIncome(integer gold, integer lumber)
+        setIncome(new Money(gold, lumber))
+    
+    function setIncome(Money income)
+        this.income = income
+        if income.gold > 0
+            addTooltipProperty("IncomeGold", income.gold)
+        if income.lumber > 0
+            addTooltipProperty("IncomeLumber", income.lumber)

@@ -18,6 +18,7 @@ public constant heroPicked = new HashMap<player, bool>
     // Hero selection event
     EventListener.add(EVENT_PLAYER_UNIT_SELECTED) ->
         let u = GetTriggerUnit()
+        print(u.getName())
         if u.getOwner().getId() == PLAYER_NEUTRAL_PASSIVE
             if gg_rct_heroSelect.contains(u.getPos())
                 let p = GetTriggerPlayer()

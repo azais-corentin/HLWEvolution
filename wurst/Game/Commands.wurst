@@ -7,6 +7,8 @@ import LinkedList
 import Initialization
 import IncomeValues
 import IncomeBoard
+import HeroSelection
+import Money
 
 let MSG_DURATION = 10.
 
@@ -47,9 +49,9 @@ function parseCommand(string str)
                         playerIncome.get(p).lumber += value
                 updateIncome(p)
         case "zoom" | "cam"
-            var zstr = args.get(1)
-            if zstr != null
-                var zoom = zstr.toInt()
+            let zoomstr = args.get(1)
+            if zoomstr != null
+                var zoom = zoomstr.toInt()
                 
                 // Minimum zoom
                 if zoom < 50
@@ -62,5 +64,86 @@ function parseCommand(string str)
 
                 SetCameraFieldForPlayer(p, CAMERA_FIELD_TARGET_DISTANCE, 16.5 * zoom, 0.3)
 
+        case "lvl"
+            let lvlstr = args.get(1)
+            if lvlstr != null
+                let hero = heroSelected.get(p)
+                let curLevel = hero.getLevel()
+                var givenAttrib = 0
+                var askedAttrib = 0
+                var givenAttribGold = 0
+                var givenAttribLumber = 0
+                let attribCost = 20000
+
+                let possibleAttribGold = (p.getGold() / attribCost).toInt()
+                let possibleAttribLumber = (p.getLumber() * goldToLumber / attribCost).toInt()
+                let possibleAttrib = possibleAttribGold + possibleAttribLumber
+
+                if possibleAttrib == 0
+                    p.print("Not enough gold!", 5)
+                else
+                    if lvlstr == "max"
+                        givenAttrib = possibleAttrib
+                    else
+                        askedAttrib = lvlstr.toInt()
+                        if askedAttrib > possibleAttrib
+                            p.print("Not enough gold!", 5)
+                        else
+                            givenAttrib = askedAttrib
+                    
+                    // Max level is 120
+                    givenAttrib = max(givenAttrib, 120 - curLevel)
+                    givenAttribGold = min(possibleAttribGold, givenAttrib)
+                    givenAttribLumber = givenAttrib - givenAttribGold
+
+                    // Add attribute
+                    hero.addLevels(givenAttrib, true)
+
+                    // Remove money
+                    p.addGold(- givenAttribGold * attribCost)
+                    p.addLumber(- (givenAttribLumber * attribCost / goldToLumber).toInt())
+                    
+        case "str" | "agi" | "int"
+            let attribstr = args.get(1)
+            if attribstr != null
+                let hero = heroSelected.get(p)
+                var givenAttrib = 0
+                var askedAttrib = 0
+                var givenAttribGold = 0
+                var givenAttribLumber = 0
+                let attribCost = 100
+
+                let possibleAttribGold = (p.getGold() / attribCost).toInt()
+                let possibleAttribLumber = (p.getLumber() * goldToLumber / attribCost).toInt()
+                let possibleAttrib = possibleAttribGold + possibleAttribLumber
+
+                if possibleAttrib == 0
+                    p.print("Not enough gold!", 5)
+                else
+                    if attribstr == "max"
+                        givenAttrib = possibleAttrib
+                    else
+                        askedAttrib = attribstr.toInt()
+                        if askedAttrib > possibleAttrib
+                            p.print("Not enough gold!", 5)
+                        else
+                            givenAttrib = askedAttrib
+                    
+                    givenAttribGold = min(possibleAttribGold, givenAttrib)
+                    givenAttribLumber = givenAttrib - givenAttribGold
+
+                    // Add attribute
+                    switch cmd
+                        case "str"
+                            hero.addStr(givenAttrib)
+                        case "agi"
+                            hero.addAgi(givenAttrib)
+                        case "int"
+                            hero.addInt(givenAttrib)
+
+                    // Remove money
+                    p.addGold(- givenAttribGold * attribCost)
+                    p.addLumber(- (givenAttribLumber * attribCost / goldToLumber).toInt())
+            
         default
             p.print("Unknown command", MSG_DURATION)

@@ -1,0 +1,23 @@
+package MathsRound
+
+// Rounds to the nearest integer (or up if exactly half)
+public function round(real x) returns integer
+    return x > 0 ? (x + 0.5).toInt() : (x - 0.5).toInt()
+
+// Rounds to the nearest multiple of n
+public function roundNearest(real x, real n) returns real
+    return round(x / n) * n
+
+// Rounds to the nearest multiple of n
+public function roundNearest(real x, int n) returns int
+    return round(x / n) * n
+
+// Returns x with places significant digits
+public function sig(real x, real places) returns real
+    let ten_pow_places = Pow(10, places)
+    return round(x * ten_pow_places) / ten_pow_places
+
+// Returns x with places significant digits
+public function sig(int x, real places) returns int
+    let ten_pow_places = Pow(10, places)
+    return (round(x * ten_pow_places) / ten_pow_places).toInt()

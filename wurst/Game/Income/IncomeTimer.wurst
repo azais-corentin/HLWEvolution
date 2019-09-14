@@ -4,7 +4,7 @@ import Initialization
 import IncomeValues
 import IncomeBoard
 
-import MoneyWrap
+import Money
 
 @earlyinit function initIncomeTimer()
     // Start 5s timer
@@ -30,6 +30,6 @@ function incomePeriodic()
 
         // Wrap income gold values to lumber
         integer nLumber = (income.gold.toReal() / goldToLumber).toInt()
-        income.gold -= goldToLumber * nLumber
+        income.gold -= goldToLumber.toInt() * nLumber
         income.lumber += nLumber
         updateIncome(p)

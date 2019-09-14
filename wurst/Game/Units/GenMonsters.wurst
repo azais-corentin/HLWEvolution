@@ -1,0 +1,53 @@
+package GenMonsters
+
+import ObjectIdGenerator
+import UnitIds
+import MonsterToolTip
+import MonsterDefinition
+import ObjectIds
+import LinkedList
+
+import Initialization
+import UnitData
+
+public constant TEST_MONSTER_ID = compiletime(UNIT_ID_GEN.next())
+public constant LV1_KEEP_ID = compiletime(UNIT_ID_GEN.next())
+
+@compiletime function genTestMonster()
+    var monsterIds = new LinkedList<int>()
+
+    for id = 0 to 0 + 9
+        let tgenid = new MonsterToolTipGenerator("A test monster")
+        monsterIds.add(UNIT_ID_GEN.next())
+        new MonsterDefinition(monsterIds.peek(), UnitIds.blackdragon, tgenid)
+        ..tooltipStartListen()
+
+        ..setName("id: " + id.toString())
+        ..setGoldCost(monsterData[id].goldCost)
+        ..setLumberCost(monsterData[id].lumberCost)
+        ..setIncome(monsterData[id].goldIncome, monsterData[id].lumberIncome)
+
+        ..tooltipStopListen()
+
+    let tgen = new MonsterToolTipGenerator("A test monster")
+    new MonsterDefinition(TEST_MONSTER_ID, UnitIds.peasant, tgen)
+    ..tooltipStartListen()
+
+    ..setName("Test Monster")
+    ..setHotkey("Q")
+    ..setIncome(2, 1)
+    ..setButtonPositionX(0)
+    ..setButtonPositionY(0)
+
+    ..tooltipStopListen()
+
+    // add the unit
+    new BuildingDefinition(LV1_KEEP_ID, UnitIds.townhall)
+    ..setUnitsSold(monsterIds.joinBy((int i) -> i.toRawCode(), ","))
+    ..setResearchesAvailable("")
+    ..setUnitsTrained("")
+    ..setNormalAbilities("")
+
+@lateinit function spawnTestKeep()
+    let pos = GetPlayableMapRect().getCenter()
+    createUnit(players[0], LV1_KEEP_ID, pos, angle(0))
