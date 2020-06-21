@@ -70,9 +70,6 @@ function parseCommand(string str)
                 let hero = heroSelected.get(p)
                 let curLevel = hero.getLevel()
                 var givenAttrib = 0
-                var askedAttrib = 0
-                var givenAttribGold = 0
-                var givenAttribLumber = 0
                 let attribCost = 20000
 
                 let possibleAttribGold = (p.getGold() / attribCost).toInt()
@@ -85,7 +82,7 @@ function parseCommand(string str)
                     if lvlstr == "max"
                         givenAttrib = possibleAttrib
                     else
-                        askedAttrib = lvlstr.toInt()
+                        let askedAttrib = lvlstr.toInt()
                         if askedAttrib > possibleAttrib
                             p.print("Not enough gold!", 5)
                         else
@@ -93,8 +90,8 @@ function parseCommand(string str)
                     
                     // Max level is 120
                     givenAttrib = max(givenAttrib, 120 - curLevel)
-                    givenAttribGold = min(possibleAttribGold, givenAttrib)
-                    givenAttribLumber = givenAttrib - givenAttribGold
+                    let givenAttribGold = min(possibleAttribGold, givenAttrib)
+                    let givenAttribLumber = givenAttrib - givenAttribGold
 
                     // Add attribute
                     hero.addLevels(givenAttrib, true)
@@ -108,9 +105,6 @@ function parseCommand(string str)
             if attribstr != null
                 let hero = heroSelected.get(p)
                 var givenAttrib = 0
-                var askedAttrib = 0
-                var givenAttribGold = 0
-                var givenAttribLumber = 0
                 let attribCost = 100
 
                 let possibleAttribGold = (p.getGold() / attribCost).toInt()
@@ -123,14 +117,14 @@ function parseCommand(string str)
                     if attribstr == "max"
                         givenAttrib = possibleAttrib
                     else
-                        askedAttrib = attribstr.toInt()
+                        let askedAttrib = attribstr.toInt()
                         if askedAttrib > possibleAttrib
                             p.print("Not enough gold!", 5)
                         else
                             givenAttrib = askedAttrib
                     
-                    givenAttribGold = min(possibleAttribGold, givenAttrib)
-                    givenAttribLumber = givenAttrib - givenAttribGold
+                    let givenAttribGold = min(possibleAttribGold, givenAttrib)
+                    let givenAttribLumber = givenAttrib - givenAttribGold
 
                     // Add attribute
                     switch cmd
