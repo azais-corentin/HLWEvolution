@@ -45,7 +45,7 @@ public class Money
     t.addAction() ->
         print("Gold more")
         let p = GetTriggerPlayer()
-        integer nLumber = ((p.getGold() - goldToLumber) / goldToLumber).toInt()
+        let nLumber = ((p.getGold() - goldToLumber) / goldToLumber).toInt()
         p.subGold(nLumber * goldToLumber.toInt())
         p.addLumber(nLumber)
 

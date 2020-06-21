@@ -74,7 +74,7 @@ function updateBoardSize()
 // Update incomeBoard's income values
 public function updateIncome(player p)
     let inc = playerIncome.get(p)
-    var row = 2 + p.getId() + p.getTeam()
+    let row = 2 + p.getId() + p.getTeam()
 
     // Income gold
     incomeBoard.getItem(row, 1)..setValue(inc.gold.toString())

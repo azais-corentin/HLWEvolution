@@ -29,7 +29,7 @@ function incomePeriodic()
         teamIncome[p.getTeam()] += income
 
         // Wrap income gold values to lumber
-        integer nLumber = (income.gold.toReal() / goldToLumber).toInt()
+        let nLumber = (income.gold.toReal() / goldToLumber).toInt()
         income.gold -= goldToLumber.toInt() * nLumber
         income.lumber += nLumber
         updateIncome(p)

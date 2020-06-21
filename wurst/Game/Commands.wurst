@@ -21,14 +21,14 @@ public string commandHelp = compiletime(
 
 @loadinit function initChatEvent() 
     EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
-        var str = GetEventPlayerChatString()
+        let str = GetEventPlayerChatString()
         if str.startsWith("-")
             parseCommand(str)
 
 function parseCommand(string str)
     let p = GetTriggerPlayer()
 
-    LinkedList<string> args = str.substring(1).split(" ")
+    let args = str.substring(1).split(" ")
 
     let cmd = args.get(0)
 

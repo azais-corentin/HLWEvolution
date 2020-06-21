@@ -14,7 +14,7 @@ public constant TEST_MONSTER_ID = compiletime(UNIT_ID_GEN.next())
 public constant LV1_KEEP_ID = compiletime(UNIT_ID_GEN.next())
 
 @compiletime function genTestMonster()
-    var monsterIds = new LinkedList<int>()
+    let monsterIds = new LinkedList<int>()
 
     for id = 0 to 0 + 9
         let tgenid = new MonsterToolTipGenerator("A test monster")

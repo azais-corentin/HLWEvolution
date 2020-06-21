@@ -1,5 +1,4 @@
 /_build
 wurst.dependencies
-Run.lnk
-.vscode/settings.json
+.vscode
 wurst/war3map.j
