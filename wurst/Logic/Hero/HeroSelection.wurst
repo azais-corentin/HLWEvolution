@@ -1,0 +1,36 @@
+package HeroSelection
+
+import HashMap
+import Players
+import ClosureEvents
+import ClosureTimers
+
+import Initialization
+
+public constant playerHero     = new HashMap<player, unit>
+public constant playerHeroPicked = new HashMap<player, bool>
+
+@lastinit function initHeroArrays()
+  for player p in ALL_PLAYERS
+    playerHero.put(p, null)
+    playerHeroPicked.put(p, false)
+
+  // Hero selection event
+  EventListener.add(EVENT_PLAYER_UNIT_SELECTED) ->
+    let u = GetTriggerUnit()
+    let p = GetTriggerPlayer()
+    if not playerHeroPicked.get(p) and p.getController() == MAP_CONTROL_USER and gg_rct_HeroSelection.contains(u.getPos())
+      // Save selection
+      if playerHero.get(p) != u
+        playerHero.put(p, u)
+        doAfter(0.4) ->
+          if not playerHeroPicked.get(p)
+            p.unselect(u)
+            playerHero.put(p, null)
+      // Create hero
+      else
+        let pos = (p.getTeam() == 0) ? gg_rct_T1Goal.getCenter() : gg_rct_T2Goal.getCenter()
+        let hero = createUnit(p, u.getTypeId(), pos, angle(0))
+        p.panCamToTimed(hero, 0.4)
+        playerHero.put(p, hero)
+        playerHeroPicked.put(p, true)

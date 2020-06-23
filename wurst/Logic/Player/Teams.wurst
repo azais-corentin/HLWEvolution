@@ -1,0 +1,54 @@
+package Teams
+
+import Players
+import ClosureEvents
+
+import Initialization
+
+public class Team
+  int id
+  int lives = 100
+  colorA color
+  var playerIds = new LinkedList<int>
+
+  construct(int id)
+    this.id = id
+
+    switch id
+      case 0
+        color = players[19].getColor().toColor().withAlpha(255)
+      case 1
+        color = players[20].getColor().toColor().withAlpha(255)
+      case 2
+        color = players[22].getColor().toColor().withAlpha(255)
+      case 3
+        color = players[23].getColor().toColor().withAlpha(255)
+
+  function isAllied(player p) returns boolean
+    return p.getTeam() == id
+
+  function playerCount() returns int
+    return playerIds.size()
+
+  function isEmpty() returns boolean
+    return playerIds.size() == 0
+
+  function addPlayer(int playerId)
+    playerIds.add(playerId)
+
+  function removePlayer(int playerId)
+    playerIds.remove(playerId)
+
+public Team array[4] teams
+
+@compiletime function initTeamPlayersEvents()
+  // Keep the player count up to date
+  EventListener.add(EVENT_PLAYER_LEAVE) ->
+    let p = GetTriggerPlayer()
+    teams[p.getTeam()].removePlayer(p.getId())
+
+@lateinit function initTeamPlayers()
+  for i = 0 to 3
+    teams[i] = new Team(i)
+  for p in ALL_PLAYERS
+    teams[p.getTeam()].addPlayer(p.getId())

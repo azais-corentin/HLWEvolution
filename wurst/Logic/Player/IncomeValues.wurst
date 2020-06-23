@@ -1,0 +1,22 @@
+package IncomeValues
+
+import Players
+import HashMap
+import ClosureEvents
+
+import Initialization
+import Money
+
+// Stores players income
+public constant playerIncome = new IterableMap<int, Money>
+public constant Money array[4] teamIncome = [new Money(), new Money(), new Money(), new Money()]
+
+@compiletime function initIncomeValuesEvents()
+  // Keep the list up to date
+  EventListener.add(EVENT_PLAYER_LEAVE) ->
+    playerIncome.remove(GetTriggerPlayer().getId())
+
+@lateinit function initIncomeValues()
+  // Default income to 20 gold
+  for player p in ALL_PLAYERS
+    playerIncome.put(p.getId(), new Money(20, 0))

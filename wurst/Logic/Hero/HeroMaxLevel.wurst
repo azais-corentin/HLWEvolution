@@ -1,0 +1,5 @@
+package HeroMaxLevel
+
+// Hero gains a level
+// if level >= 1000
+// add ability teleport

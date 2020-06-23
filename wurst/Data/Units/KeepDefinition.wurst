@@ -1,0 +1,29 @@
+package KeepDefinition
+
+import public UnitObjEditing
+
+constant string goldColor = compiletime(COLOR_GOLD.toColorString())
+
+public class KeepDefinition extends BuildingDefinition
+  construct(int newId, int origId)
+    super(newId, origId)
+    // Reset defaults
+    setNormalAbilities("")
+    setUpgradesUsed("")
+    setUnitsTrained("")
+    setUnitsSold("")
+    setResearchesAvailable("")
+    setTooltipExtended("")
+    setRequirements("")
+    // Disable combat
+    setAttacksEnabled(0)
+    setTargetedAs("invulnerable")
+    // Upgrade
+    setBuildTime(3)
+    setHotkey("U")
+    setButtonPositionX(3)
+    setButtonPositionY(2)
+  
+  override function setName(string value)
+    super.setName(value)
+    setTooltipBasic(goldColor + "U|rpgrade to " + value)

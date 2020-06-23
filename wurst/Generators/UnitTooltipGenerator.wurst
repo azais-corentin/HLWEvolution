@@ -4,93 +4,93 @@ import public UnitObjEditing
 import ObjEditingNatives
 
 public interface UnitTooltipGenerator
-    function addProperty(string title, string lc)
-    function applyToDef(UnitOrBuildingOrHeroDefinition def)
+  function addProperty(string title, string lc)
+  function applyToDef(UnitOrBuildingOrHeroDefinition def)
 
 public class UnitOrBuildingOrHeroDefinitionGen extends UnitOrBuildingOrHeroDefinition
-    
-    UnitTooltipGenerator tooltipGen = null
-    boolean listen = false
+  
+  UnitTooltipGenerator tooltipGen = null
+  boolean listen = false
 
-    construct(int newId, int origId)
-        super(newId, origId)
+  construct(int newId, int origId)
+    super(newId, origId)
 
-    construct(int newId, int origId, UnitTooltipGenerator tgen)
-        super(newId, origId)
-        registerTooltipGenerator(tgen)
-    
-    function addTooltipProperty(string pName, string lc)
-        if tooltipGen != null and listen
-            tooltipGen.addProperty(pName, lc)
+  construct(int newId, int origId, UnitTooltipGenerator tgen)
+    super(newId, origId)
+    registerTooltipGenerator(tgen)
+  
+  function addTooltipProperty(string pName, string lc)
+    if tooltipGen != null and listen
+      tooltipGen.addProperty(pName, lc)
 
-    function addTooltipProperty(string pName, int lc)
-        addTooltipProperty(pName, lc.toString())
+  function addTooltipProperty(string pName, int lc)
+    addTooltipProperty(pName, lc.toString())
 
-    function addTooltipProperty(string pName, real lc)
-        addTooltipProperty(pName, lc.toString())
+  function addTooltipProperty(string pName, real lc)
+    addTooltipProperty(pName, lc.toString())
 
-    function addTooltipProperty(string pName, boolean lc)
-        addTooltipProperty(pName, lc.toString())
-    
-    function registerTooltipGenerator(UnitTooltipGenerator tgen)
-        tooltipGen = tgen
-    
-    function tooltipStartListen()
-        listen = true
+  function addTooltipProperty(string pName, boolean lc)
+    addTooltipProperty(pName, lc.toString())
+  
+  function registerTooltipGenerator(UnitTooltipGenerator tgen)
+    tooltipGen = tgen
+  
+  function tooltipStartListen()
+    listen = true
 
-    function tooltipStopListen()
-        tooltipStopListen(true)
-    
-    function tooltipStopListen(boolean build)
-        listen = false
-        if tooltipGen != null and build
-            tooltipGen.applyToDef(this)
+  function tooltipStopListen()
+    tooltipStopListen(true)
+  
+  function tooltipStopListen(boolean build)
+    listen = false
+    if tooltipGen != null and build
+      tooltipGen.applyToDef(this)
 
-    override function setName(string data)
-        super.setName(data)
-        addTooltipProperty("Name", data)
+  override function setName(string data)
+    super.setName(data)
+    addTooltipProperty("Name", data)
 
-    override function setHotkey(string value)
-        super.setHotkey(value)
-        addTooltipProperty("Hotkey", value)
+  override function setHotkey(string value)
+    super.setHotkey(value)
+    addTooltipProperty("Hotkey", value)
 
 public class UnitOrHeroDefinitionGen extends UnitOrBuildingOrHeroDefinitionGen
-    construct(int newId, int origId, UnitTooltipGenerator tgen)
-        super(newId, origId, tgen)
+  construct(int newId, int origId, UnitTooltipGenerator tgen)
+    super(newId, origId, tgen)
 
-    function setTransportedSize(int data)
-        def.setInt("ucar", data)
+  function setTransportedSize(int data)
+    def.setInt("ucar", data)
 
-    function setLevel(int data)
-        def.setInt("ulev", data)
+  function setLevel(int data)
+    def.setInt("ulev", data)
 
-    function setGroupSeparationPriority(int data)
-        def.setInt("urpr", data)
+  function setGroupSeparationPriority(int data)
+    def.setInt("urpr", data)
 
-    function setGroupSeparationParameter(int data)
-        def.setInt("urpp", data)
+  function setGroupSeparationParameter(int data)
+    def.setInt("urpp", data)
 
-    function setGroupSeparationGroupNumber(int data)
-        def.setInt("urpg", data)
+  function setGroupSeparationGroupNumber(int data)
+    def.setInt("urpg", data)
 
-    function setGroupSeparationEnabled(boolean data)
-        def.setBoolean("urpo", data)
+  function setGroupSeparationEnabled(boolean data)
+    def.setBoolean("urpo", data)
 
-    function setFormationRank(int data)
-        def.setInt("ufor", data)
+  function setFormationRank(int data)
+    def.setInt("ufor", data)
 
-    override function setStructuresBuilt(string data)
-        def.setString("ubui", data)
+  override function setStructuresBuilt(string data)
+    def.setString("ubui", data)
 
 public class UnitDefinitionGen extends UnitOrBuildingOrHeroDefinitionGen
-    construct(int newId, int origId, UnitTooltipGenerator tgen)
-        super(newId, origId, tgen)
+  construct(int newId, int origId, UnitTooltipGenerator tgen)
+    super(newId, origId, tgen)
 
-    function setCasterUpgradeTips(string data)
-        def.setString("ucut", data)
+  function setCasterUpgradeTips(string data)
+    def.setString("ucut", data)
 
-    function setCasterUpgradeNames(string data)
-        def.setString("ucun", data)
+  function setCasterUpgradeNames(string data)
+    def.setString("ucun", data)
 
-    function setCasterUpgradeArt(string data)
-        def.setString("ucua", data)
+  function setCasterUpgradeArt(string data)
+    def.setString("ucua", data)

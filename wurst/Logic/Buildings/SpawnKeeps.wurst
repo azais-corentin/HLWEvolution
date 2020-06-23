@@ -1,0 +1,26 @@
+package SpawnKeeps
+
+import ClosureEvents
+
+import Initialization
+import GenKeeps
+
+constant rect array keepRect = [gg_rct_Keep1, gg_rct_Keep2, gg_rct_Keep3, gg_rct_Keep4,
+                                gg_rct_Keep5, gg_rct_Keep6, gg_rct_Keep7, gg_rct_Keep8,
+                                gg_rct_Keep9, gg_rct_Keep10, gg_rct_Keep11, gg_rct_Keep12,
+                                gg_rct_Keep13, gg_rct_Keep14, gg_rct_Keep15, gg_rct_Keep16]
+
+@lastinit function upgradeKeeps()
+  // Solves the bug of upgraded buildings not updating the sold units
+  EventListener.add(EVENT_PLAYER_UNIT_UPGRADE_FINISH) -> 
+    let u = GetTriggerUnit()
+    let p = u.getOwner()
+    let typeid = u.getTypeId()
+    let pos = u.getPos()
+    u.remove()
+    createUnit(p, typeid, pos, angle(0))
+
+@lateinit function spawnKeeps()
+  for i = 0 to 15
+    //if players[i].isIngame()
+    createUnit(players[i], BEGINNER_KEEP_ID, keepRect[i].getCenter(), angle(0))

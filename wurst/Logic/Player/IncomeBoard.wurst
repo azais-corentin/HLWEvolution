@@ -1,0 +1,103 @@
+package IncomeBoard
+
+import ClosureEvents
+import Initialization
+import Players
+import Teams
+import IncomeValues
+
+constant multiboard incomeBoard = CreateMultiboard()
+
+public function multiboarditem.setTeamName(int id)
+  this..setValue("Team " + id.toString())..setValueColor(teams[id].color)
+
+@lastinit function initIncomeBoard()
+  incomeBoard
+  ..setColumnCount(4)
+  ..setTitle("Incomes & lives")
+
+  updateBoardSize()
+
+  // Set style
+  for i = 0 to incomeBoard.getRowCount()
+    incomeBoard.getItem(i, 0)..setStyle(true, false)..setWidth(0.1)
+    incomeBoard.getItem(i, 1)..setStyle(true, false)..setWidth(0.06)
+    incomeBoard.getItem(i, 2)..setStyle(true, false)..setWidth(0.06)
+    incomeBoard.getItem(i, 3)..setStyle(true, false)..setWidth(0.03)
+
+  // Column headers
+  incomeBoard.setItemValue(0, 0, "Name")
+  incomeBoard.getItem(0, 1)..setStyle(false, true).setIcon("ReplaceableTextures\\CommandButtons\\BTNGoldMine.blp")
+  incomeBoard.getItem(0, 2)..setStyle(false, true).setIcon("ReplaceableTextures\\CommandButtons\\BTNBundleOfLumber.blp")
+  incomeBoard.setItemValue(0, 3, "Lives")
+
+  incomeBoard..hide()..show()
+
+  // Update board when someone leaves
+  EventListener.add(EVENT_PLAYER_LEAVE) ->
+    CreateTimer().start(0.1, function updateBoardSize)
+  
+  CreateTimer().startPeriodic(0.5, () -> updateIncomes())
+    
+function updateBoardSize()
+  var rows = 1
+  for iTeam = 0 to 3
+    let team = teams[iTeam]
+    if not team.isEmpty()
+      rows += 1 + team.playerCount()
+  
+  incomeBoard
+  ..setRowCount(rows)
+  
+  var iRow = 1
+  for iTeam = 0 to 3
+    let team = teams[iTeam]
+    if not team.isEmpty()
+      incomeBoard.getItem(iRow, 0).setTeamName(iTeam)
+      iRow++
+      for id in team.playerIds
+        incomeBoard..setItemValue(iRow, 0, players[id].getNameColored())
+        iRow++
+  
+  updateLives()
+  updateIncomes()
+
+  // Refresh board
+  incomeBoard..display(false)..display(true)
+
+public function updateIncomes()
+  var iRow = 1
+  for iTeam = 0 to 3
+    let team = teams[iTeam]
+    if not team.isEmpty()
+      incomeBoard
+      ..setItemValue(iRow, 1, teamIncome[iTeam].gold)
+      ..setItemValue(iRow, 2, teamIncome[iTeam].lumber)
+      iRow++
+      for id in team.playerIds
+        let pInc = playerIncome.get(id)
+        incomeBoard
+        ..setItemValue(iRow, 1, pInc.gold)
+        ..setItemValue(iRow, 2, pInc.lumber)
+        iRow++
+
+public function updateIncome(player p)
+  let inc = playerIncome.get(p.getId())
+  var iRow = 1
+  let pTeam = p.getTeam()
+  for iTeam = 0 to pTeam
+    let team = teams[iTeam]
+    if not team.isEmpty()
+      iRow += 1 + team.playerCount()
+
+  incomeBoard
+  ..setItemValue(iRow, 1, inc.gold)
+  ..setItemValue(iRow, 2, inc.lumber)
+
+public function updateLives()
+  var iRow = 1
+  for iTeam = 0 to 3
+    let team = teams[iTeam]
+    if not team.isEmpty()
+      incomeBoard..setItemValue(iRow, 3, team.lives)
+      iRow += 1 + team.playerCount()

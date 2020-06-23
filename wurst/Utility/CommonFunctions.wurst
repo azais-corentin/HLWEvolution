@@ -1,0 +1,13 @@
+package CommonFunctions
+
+public function isUserMonster() returns boolean
+  let u = GetEnteringUnit()
+  return not u.isType(UNIT_TYPE_HERO)
+    and u.isType(UNIT_TYPE_SUMMONED)
+    and u.getOwner().getController() == MAP_CONTROL_USER
+
+public function isTeamMonster() returns boolean
+  let u = GetEnteringUnit()
+  return not u.isType(UNIT_TYPE_HERO)
+    and u.isType(UNIT_TYPE_SUMMONED)
+    and u.getOwner().getController() == MAP_CONTROL_COMPUTER

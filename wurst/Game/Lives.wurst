@@ -1,7 +1,0 @@
-package Lives
-
-public integer array[2] lives = [100, 100]
-
-function initLives()
-    // TODO See which event corresponds
-    skip

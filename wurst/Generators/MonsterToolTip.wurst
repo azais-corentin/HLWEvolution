@@ -10,100 +10,100 @@ import public UnitTooltipGenerator
 constant BASIC_PATTERN = "$name$ [" + COLOR_GOLD.toColorString() + "$hotkey$|r]"
 
 public class MonsterToolTipGenerator implements UnitTooltipGenerator
-    private constant propMap = new IterableMap<string, string>
-    private var description = ""
+  private constant propMap = new IterableMap<string, string>
+  private var description = ""
 
-    private var incomegold = ""
-    private var incomelumber = ""
-    private var hotkey = ""
-    private var name = ""
+  private var incomegold = ""
+  private var incomelumber = ""
+  private var hotkey = ""
+  private var name = ""
 
-    construct(string description)
-        this.description = description
+  construct(string description)
+    this.description = description
 
-    //construct()
+  //construct()
 
-    override function addProperty(string title, string lc)
-        propMap.put(title, lc)
+  override function addProperty(string title, string lc)
+    propMap.put(title, lc)
 
-    override function applyToDef(UnitOrBuildingOrHeroDefinition def)
-        name = propMap.has("Name") ? propMap.getAndRemove("Name") : "unnamed"
-        hotkey = propMap.has("Hotkey") ? propMap.getAndRemove("Hotkey") : "?"
-        incomegold = propMap.has("IncomeGold") ? propMap.getAndRemove("IncomeGold") : ""
-        incomelumber = propMap.has("IncomeLumber") ? propMap.getAndRemove("IncomeLumber") : ""
+  override function applyToDef(UnitOrBuildingOrHeroDefinition def)
+    name = propMap.has("Name") ? propMap.getAndRemove("Name") : "unnamed"
+    hotkey = propMap.has("Hotkey") ? propMap.getAndRemove("Hotkey") : "?"
+    incomegold = propMap.has("IncomeGold") ? propMap.getAndRemove("IncomeGold") : ""
+    incomelumber = propMap.has("IncomeLumber") ? propMap.getAndRemove("IncomeLumber") : ""
 
-        def..setTooltipBasic(generateBasicTooltip())
-        ..setTooltipExtended(generateExtendedTooltip())
+    def..setTooltipBasic(generateBasicTooltip())
+    ..setTooltipExtended(generateExtendedTooltip())
 
-    function generateBasicTooltip() returns string
-        return replaceRefs(BASIC_PATTERN)
+  function generateBasicTooltip() returns string
+    return replaceRefs(BASIC_PATTERN)
 
-    function generateExtendedTooltip() returns string
-        string pattern = "Income|n"
-        if incomegold != ""
-            pattern += "    $income.gold$ gold|n"
-        if incomelumber != ""
-            pattern += "    $income.lumber$ lumber"
+  function generateExtendedTooltip() returns string
+    string pattern = "Income|n"
+    if incomegold != ""
+      pattern += "  $income.gold$ gold|n"
+    if incomelumber != ""
+      pattern += "  $income.lumber$ lumber"
 
-        return replaceRefs(pattern)
+    return replaceRefs(pattern)
 
-    private function replaceRefs(string old) returns string
-        var newString = old
-        newString = newString.replace("$name$", name)
-        newString = newString.replace("$hotkey$", hotkey.toUpperCase())
-        newString = newString.replace("$income.gold$", incomegold)
-        newString = newString.replace("$income.lumber$", incomelumber)
-        return newString
+  private function replaceRefs(string old) returns string
+    var newString = old
+    newString = newString.replace("$name$", name)
+    newString = newString.replace("$hotkey$", hotkey.toUpperCase())
+    newString = newString.replace("$income.gold$", incomegold)
+    newString = newString.replace("$income.lumber$", incomelumber)
+    return newString
 
-    /*
-    private function generateTooltipExtended(int lvl, boolean learn) returns string
-        var s = ""
-        if targettype == Targettype.PASSIVE
-            s += TITLE_COLOR + "Passive|r\n"
-        else
-            if learn
-                s += TITLE_COLOR + TITLE_TTYPE + "|r " + targettype.toString() + "\n"
-            else
-                s += TITLE_COLOR + TITLE_TTYPE + " |cffFFCC00" + targettype.toString() + "|r\n"
+  /*
+  private function generateTooltipExtended(int lvl, boolean learn) returns string
+    var s = ""
+    if targettype == Targettype.PASSIVE
+      s += TITLE_COLOR + "Passive|r\n"
+    else
+      if learn
+        s += TITLE_COLOR + TITLE_TTYPE + "|r " + targettype.toString() + "\n"
+      else
+        s += TITLE_COLOR + TITLE_TTYPE + " |cffFFCC00" + targettype.toString() + "|r\n"
 
-        for key in propMap
-            var tmp = ""
-            for i = 1 to levels
-                tmp += fixValue(propMap.get(key).run(i)) + "/"
-            s += TITLE_COLOR + key + ":|r " + colorLevelValue(tmp.substring(0, tmp.length() - 1), lvl, levels) + "\n"
-        s+= "\n"
-        s+= description
-        return s
+    for key in propMap
+      var tmp = ""
+      for i = 1 to levels
+        tmp += fixValue(propMap.get(key).run(i)) + "/"
+      s += TITLE_COLOR + key + ":|r " + colorLevelValue(tmp.substring(0, tmp.length() - 1), lvl, levels) + "\n"
+    s+= "\n"
+    s+= description
+    return s
 
-    private static function fixValue(string value) returns string
-        var s = value
-        if s.endsWith(".")
-            s = s.substring(0, s.length()-1)
-        else if s.length() > 1 and s.endsWith(".0")
-            s = s.substring(0, s.length()-2)
-        return s
+  private static function fixValue(string value) returns string
+    var s = value
+    if s.endsWith(".")
+      s = s.substring(0, s.length()-1)
+    else if s.length() > 1 and s.endsWith(".0")
+      s = s.substring(0, s.length()-2)
+    return s
 
-    private static function colorLevelValue(string oldString, int lvl, int maxLevel) returns string
-        var _newString = ""
-        var charCount = 0
-        var charPosCount = 0
-        int array charPos
-        for char in oldString
-            if char == "/"
-                charPos[charPosCount] = charCount
-                charPosCount++
-            charCount++
-        if lvl == -1
-            _newString = oldString
-        else if charPosCount <= 0
-            _newString = "|cffFFCC00" + oldString
-        else if maxLevel <= 1
-            _newString = "|cffFFCC00" + oldString
-        else if lvl == 1
-            _newString = "|cffFFCC00" + oldString.substring(0, charPos[0]) + "|r" + oldString.substring(charPos[0], oldString.length())
-        else if lvl == maxLevel
-            _newString = oldString.substring(0, charPos[lvl-2]) + "|cffFFCC00" + oldString.substring(charPos[lvl-2], oldString.length()) + "|r"
-        else
-            _newString = oldString.substring(0, charPos[lvl-2]) + "|cffFFCC00" + oldString.substring(charPos[lvl-2], charPos[lvl-1]) + "|r" + oldString.substring(charPos[lvl-1], oldString.length())
-        return _newString
-    */
+  private static function colorLevelValue(string oldString, int lvl, int maxLevel) returns string
+    var _newString = ""
+    var charCount = 0
+    var charPosCount = 0
+    int array charPos
+    for char in oldString
+      if char == "/"
+        charPos[charPosCount] = charCount
+        charPosCount++
+      charCount++
+    if lvl == -1
+      _newString = oldString
+    else if charPosCount <= 0
+      _newString = "|cffFFCC00" + oldString
+    else if maxLevel <= 1
+      _newString = "|cffFFCC00" + oldString
+    else if lvl == 1
+      _newString = "|cffFFCC00" + oldString.substring(0, charPos[0]) + "|r" + oldString.substring(charPos[0], oldString.length())
+    else if lvl == maxLevel
+      _newString = oldString.substring(0, charPos[lvl-2]) + "|cffFFCC00" + oldString.substring(charPos[lvl-2], oldString.length()) + "|r"
+    else
+      _newString = oldString.substring(0, charPos[lvl-2]) + "|cffFFCC00" + oldString.substring(charPos[lvl-2], charPos[lvl-1]) + "|r" + oldString.substring(charPos[lvl-1], oldString.length())
+    return _newString
+  */

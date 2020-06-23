@@ -1,0 +1,31 @@
+package GameRegions
+
+public constant rect array rects_T1_Spawn = [gg_rct_T1TSpawn, gg_rct_T1BSpawn]
+public constant rect array rects_T2_Spawn = [gg_rct_T2TSpawn, gg_rct_T2BSpawn]
+public constant rect array rects_T3_Spawn = [gg_rct_T3TSpawn, gg_rct_T3BSpawn]
+public constant rect array rects_T4_Spawn = [gg_rct_T4TSpawn, gg_rct_T4BSpawn]
+
+// Keeps
+public constant region_T1Keeps = CreateRegion()..addRect(gg_rct_T1Keeps)
+public constant region_T2Keeps = CreateRegion()..addRect(gg_rct_T2Keeps)
+public constant region_T3Keeps = CreateRegion()..addRect(gg_rct_T3Keeps)
+public constant region_T4Keeps = CreateRegion()..addRect(gg_rct_T4Keeps)
+
+// Spawns
+public constant region_T1_Spawn = CreateRegion()..addRect(gg_rct_T1TSpawn)..addRect(gg_rct_T1BSpawn)
+public constant region_T2_Spawn = CreateRegion()..addRect(gg_rct_T2TSpawn)..addRect(gg_rct_T2BSpawn)
+public constant region_T3_Spawn = CreateRegion()..addRect(gg_rct_T3TSpawn)..addRect(gg_rct_T3BSpawn)
+public constant region_T4_Spawn = CreateRegion()..addRect(gg_rct_T4TSpawn)..addRect(gg_rct_T4BSpawn)
+
+// T1 monster movements
+public constant region_T1_IGoal = CreateRegion()..addRect(gg_rct_T1IGoal)
+public constant region_T1_Goal  = CreateRegion()..addRect(gg_rct_T1Goal)
+// T2 monster movements
+public constant region_T2_IGoal = CreateRegion()..addRect(gg_rct_T2IGoal)
+public constant region_T2_Goal  = CreateRegion()..addRect(gg_rct_T2Goal)
+// T3 monster movements
+public constant region_T3_IGoal = CreateRegion()..addRect(gg_rct_T3IGoal)
+public constant region_T3_Goal  = CreateRegion()..addRect(gg_rct_T3Goal)
+// T4 monster movements
+public constant region_T4_IGoal = CreateRegion()..addRect(gg_rct_T4IGoal)
+public constant region_T4_Goal  = CreateRegion()..addRect(gg_rct_T4Goal)

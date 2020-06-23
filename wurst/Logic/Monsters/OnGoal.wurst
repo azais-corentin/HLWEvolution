@@ -1,0 +1,41 @@
+package OnGoal
+
+import Initialization
+import CommonFunctions
+import Teams
+import IncomeBoard
+
+let u1 = GetUnitsInRectOfPlayer(gg_rct_T1Goal, players[19]).next()
+let u2 = GetUnitsInRectOfPlayer(gg_rct_T2Goal, players[20]).next()
+let u3 = GetUnitsInRectOfPlayer(gg_rct_T3Goal, players[22]).next()
+let u4 = GetUnitsInRectOfPlayer(gg_rct_T4Goal, players[23]).next()
+
+function onMonsterFinished()
+  let u = GetTriggerUnit()
+  int team
+  if u == u1
+    team = 0
+  else if u == u2
+    team = 1
+  else if u == u3
+    team = 2
+  else
+    team = 3
+
+  let _id = u.getTypeId()
+
+  u.kill()
+  
+  teams[team].lives--
+  updateLives()
+
+  // check game lost?
+
+@lateinit function onGoal()
+  CreateTrigger()
+  ..registerUnitInRange(u1, 100, null)
+  ..registerUnitInRange(u2, 100, null)
+  ..registerUnitInRange(u3, 100, null)
+  ..registerUnitInRange(u4, 100, null)
+  ..addCondition(Condition(function isTeamMonster))
+  ..addAction(function onMonsterFinished)

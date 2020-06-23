@@ -1,0 +1,57 @@
+package MoveToSpawn
+
+import Initialization
+import GameRegions
+import GenMonsters
+import IncomeValues
+import CommonFunctions
+//import StringUtilities
+
+function onMonsterTrained()
+  let u = GetEnteringUnit()
+  let p = u.getOwner()
+  let r = GetTriggeringRegion()
+  player newOwner
+  int teamFrom
+  if r == region_T1Keeps
+    newOwner = players[19]
+    teamFrom = 0
+  else if r == region_T2Keeps
+    newOwner = players[20]
+    teamFrom = 1
+  else if r == region_T3Keeps
+    newOwner = players[21]
+    teamFrom = 2
+  else if r == region_T4Keeps
+    newOwner = players[22]
+    teamFrom = 3
+  else
+    Log.error("onMonsterTrained() was triggered by an unknown region")
+    return
+    
+  u.setOwner(newOwner, true)
+
+  var i = GetRandomInt(0, 7)
+  while i == 2 * teamFrom or i == (2 * teamFrom) + 1
+    i = GetRandomInt(0, 7)
+
+  switch i
+    case 0 | 1
+      u.setPos(rects_T1_Spawn[i mod 2].randomPoint())
+    case 2 | 3
+      u.setPos(rects_T2_Spawn[i mod 2].randomPoint())
+    case 4 | 5
+      u.setPos(rects_T3_Spawn[i mod 2].randomPoint())
+    case 6 | 7
+      u.setPos(rects_T4_Spawn[i mod 2].randomPoint())
+ 
+  playerIncome.put(p.getId(), playerIncome.get(p.getId()) + monsterIncome(u))
+
+@lateinit function moveToSpawn()
+  CreateTrigger()
+  ..registerEnterRegion(region_T1Keeps, null)
+  ..registerEnterRegion(region_T2Keeps, null)
+  ..registerEnterRegion(region_T3Keeps, null)
+  ..registerEnterRegion(region_T4Keeps, null)
+  ..addCondition(Condition(function isUserMonster))
+  ..addAction(function onMonsterTrained)

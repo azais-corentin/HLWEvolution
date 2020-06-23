@@ -1,0 +1,41 @@
+package GenMonsters
+
+import ObjectIdGenerator
+import UnitIds
+import MonsterToolTip
+import MonsterDefinition
+import LinkedList
+
+import Constants
+import MonsterData
+import Money
+
+public constant TEST_MONSTER_ID = compiletime(UNIT_ID_GEN.next())
+
+public var monsterIds = [compiletime(new LinkedList<int>), compiletime(new LinkedList<int>), compiletime(new LinkedList<int>), compiletime(new LinkedList<int>)]
+public var monsterTypesToId = compiletime(new LinkedList<int>)
+
+@compiletime function genTestMonster()
+  for i = 0 to monsterCount - 1
+    let monsterId = UNIT_ID_GEN.next()
+    monsterIds[(i / monsterPerKeep).toInt()].add(monsterId)
+    monsterTypesToId.add(monsterId)
+    let data = monsterData.get(i)
+    new MonsterDefinition(monsterId, UnitIds.blackdragonwhelp, new MonsterToolTipGenerator("A test monster"))
+    ..tooltipStartListen()
+
+    ..setName("MonsterId: " + i.toString())
+    ..setTooltipBasic("basic")
+    ..setTooltipBasic("extended")
+    ..setCost(data.cost)
+    ..setIncome(data.income)
+    ..setAttack1DamageBase(data.damage)
+    ..setHotkey(data.hotkey)
+    ..setButtonPositionX(data.buttonPosition.x)
+    ..setButtonPositionY(data.buttonPosition.y)
+
+    ..tooltipStopListen()
+
+public function monsterIncome(unit u) returns Money
+  let id = monsterTypesToId.indexOf(u.getTypeId())
+  return monsterData.get(id).income

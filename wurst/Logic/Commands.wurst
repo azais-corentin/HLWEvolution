@@ -1,0 +1,173 @@
+package Commands
+
+import StringUtils
+import ClosureEvents
+import LinkedList
+
+import Constants
+import Initialization
+import IncomeValues
+import IncomeBoard
+import HeroSelection
+import Money
+
+public bool DEBUG_MODE = false
+
+public string help_string = compiletime(
+  "-help: Shows this help message\n" +
+  "-buy <attribute> [max | <amount>]: Buys attributes\n" +
+  "-<attribute> [max | <amount>]:  Buys attributes\n" +
+  "-zoom [x], -cam [x]: Sets camera zoom (between {0} and {1})\n".format(zoom_minimum.toString(), zoom_maximum.toString()) +
+  "Valid attributes:\n" + 
+  "   - 100 gold: str, agi, int, lvl\n" +
+  "   - 20000 gold: lvl\n"
+  )
+
+public string debug_help_string = compiletime(
+  "-income <g | l> [amount]:      Sets income for gold, lumber or both to amount (or 0à\n"
+  )
+
+enum Attribute
+  Strength
+  Agility
+  Intelligence
+  Level
+
+@loadinit function initChatEvent() 
+  EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
+    let str = GetEventPlayerChatString()
+    if str.startsWith("-")
+      handleCommand(str)
+
+function handleCommand(string str)
+  let p = GetTriggerPlayer()
+
+  let args = str.substring(1).split(" ")
+
+  args.getFirst()
+  let cmd = args.get(0)
+
+  switch cmd
+    case "help"
+      p.print("Help:\n" + help_string)
+      if DEBUG_MODE
+        p.print(debug_help_string)
+
+    case "zoom" | "cam"
+      let zoomstr = args.get(1)
+      var zoom = zoomstr.toInt()
+      if(zoom == 0)
+        zoom = 100
+      zoom = zoom.clamp(zoom_minimum, zoom_maximum)
+
+      SetCameraFieldForPlayer(p, CAMERA_FIELD_TARGET_DISTANCE, 16.5 * zoom, 0.3)
+
+    case "buy"
+      buy_attribute(p, args.get(1), args.get(2))
+
+    case "str" | "agi" | "int" | "lvl"
+      buy_attribute(p, cmd, args.get(1))
+
+    case "hlwdbgsecret"
+      let enable = args.get(1)
+      switch enable
+        case "on" | ""
+          DEBUG_MODE = true
+          p.print("Debug mode enabled", message_duration)
+        case "off"
+          DEBUG_MODE = false
+          p.print("Debug mode disabled", message_duration)
+    
+    case "income"
+      let whichstr = args.get(1)
+      let amount = args.get(2).toInt()
+      switch whichstr
+        case "g"
+          playerIncome.get(p.getId()).gold = amount
+        case "l"
+          playerIncome.get(p.getId()).lumber = amount
+        default
+          let inc = playerIncome.get(p.getId())
+          inc.gold = amount
+          inc.lumber = amount
+      updateIncome(p)
+
+    default
+      p.print("Unknown command '{0}'".format(cmd), message_duration)
+
+function buy_attribute(player p, string attributestr, string amountstr)
+  Attribute attribute
+
+  int attributeCostGold
+
+  // Parse attribute
+  switch attributestr
+    case "str" | "strength"
+      attribute = Strength
+      attributeCostGold = 100
+    case "agi" | "agility"
+      attribute = Agility
+      attributeCostGold = 100
+    case "int" | "intelligence"
+      attribute = Intelligence
+      attributeCostGold = 100
+    case "lvl" | "level"
+      attribute = Level
+      attributeCostGold = 20000
+    default
+      p.print("Unknown attribute {0}".format(attributestr), message_duration)
+      return
+  let attributeCostLumber = attributeCostGold / goldToLumber
+
+  // Parse amount
+  int askedAmount
+  if amountstr == "max"
+    askedAmount = -1
+  else
+    askedAmount = amountstr.toInt()
+  
+  // Get maximum possible attribute
+  let possibleAttributeGold =   (p.getGold() / attributeCostGold).toInt()
+  let possibleAttributeLumber = (p.getLumber() / attributeCostLumber).toInt()
+  let possibleAttributeTotal =  possibleAttributeGold + possibleAttributeLumber
+
+  if possibleAttributeTotal == 0
+    p.print("Not enough money!", message_duration)
+    if not DEBUG_MODE
+      return
+  
+  // Get given amount from asked value
+  int givenAttributeTotal
+  if askedAmount == -1
+    givenAttributeTotal = possibleAttributeTotal
+  else if askedAmount <= possibleAttributeTotal
+    givenAttributeTotal = askedAmount
+  else
+    p.print("Not enough money!", message_duration)
+    if not DEBUG_MODE
+      return
+    givenAttributeTotal = askedAmount
+
+  int givenAttributeGold
+  int givenAttributeLumber
+  let hero = playerHero.get(p)
+
+  // Get given amount
+  if attribute == Level
+    givenAttributeTotal = max(givenAttributeTotal, maximum_level - hero.getLevel())
+  givenAttributeGold = min(possibleAttributeGold, givenAttributeTotal)
+  givenAttributeLumber = givenAttributeTotal - givenAttributeGold
+
+  switch attribute
+    case Strength
+      hero.addStr(givenAttributeTotal)
+    case Agility
+      hero.addAgi(givenAttributeTotal)
+    case Intelligence
+      hero.addInt(givenAttributeTotal)
+    case Level
+      hero.addLevels(givenAttributeTotal, true)
+  
+  // Remove money
+  p.subGold(givenAttributeGold * attributeCostGold)
+  p.subGold((givenAttributeLumber * attributeCostLumber).toInt())

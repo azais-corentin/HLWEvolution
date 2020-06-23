@@ -1,0 +1,57 @@
+package MoveToGoals
+
+import OrderIds
+
+import Initialization
+import CommonFunctions
+import GameRegions
+
+function onMonsterSpawned()
+  let u = GetEnteringUnit()
+  let y = u.getPos().y
+  let reg =  GetTriggeringRegion()
+  real goalX
+  if reg == region_T1_Spawn
+    goalX = gg_rct_T1IGoal.getMaxX()
+  else if reg == region_T2_Spawn
+    goalX = gg_rct_T2IGoal.getMaxX()
+  else if reg == region_T3_Spawn
+    goalX = gg_rct_T3IGoal.getMaxX()
+  else
+    goalX = gg_rct_T4IGoal.getMaxX()
+
+  u.issuePointOrderById(OrderIds.patrol, vec2(goalX, y))
+
+function onMonsterIGoal()
+  let u = GetEnteringUnit()
+  let reg = GetTriggeringRegion()
+  vec2 goalPosition
+  if reg == region_T1_IGoal
+    goalPosition = gg_rct_T1Goal.getCenter()
+  else if reg == region_T2_IGoal
+    goalPosition = gg_rct_T2Goal.getCenter()
+  else if reg == region_T3_IGoal
+    goalPosition = gg_rct_T3Goal.getCenter()
+  else
+    goalPosition = gg_rct_T4Goal.getCenter()
+  
+  u.issuePointOrderById(OrderIds.patrol, goalPosition)
+
+@lateinit function moveToGoals()
+  // Spawn to intermediate goal
+  CreateTrigger()
+  ..registerEnterRegion(region_T1_Spawn, null)
+  ..registerEnterRegion(region_T2_Spawn, null)
+  ..registerEnterRegion(region_T3_Spawn, null)
+  ..registerEnterRegion(region_T4_Spawn, null)
+  ..addCondition(Condition(function isTeamMonster))
+  ..addAction(function onMonsterSpawned)
+
+  // Intermediate goal to final goal
+  CreateTrigger()
+  ..registerEnterRegion(region_T1_IGoal, null)
+  ..registerEnterRegion(region_T2_IGoal, null) 
+  ..registerEnterRegion(region_T3_IGoal, null)
+  ..registerEnterRegion(region_T4_IGoal, null)
+  ..addCondition(Condition(function isTeamMonster))
+  ..addAction(function onMonsterIGoal)

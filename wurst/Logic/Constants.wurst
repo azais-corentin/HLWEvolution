@@ -1,0 +1,31 @@
+package Constants
+
+// Game
+public constant int maximum_level = 1000
+public real goldToLumber = 1000000
+
+public constant int zoom_minimum = 50
+public constant int zoom_maximum = 220
+
+// Monsters
+public constant int monsterPerKeep = 10
+public constant int monsterKeepLevels = 4
+public constant int monsterCount = monsterPerKeep * monsterKeepLevels
+
+@configurable public constant real priceC1 = 1.4
+@configurable public constant real priceC2 = 4
+
+@configurable public constant real incomeC1 = 0.85
+@configurable public constant real incomeC2 = 3
+
+@configurable public constant real damageC1 = 1.35
+@configurable public constant real damageC2 = -1
+
+@configurable public constant real hpC1 = 100
+@configurable public constant real hpC2 = 1.246076 // = exp(0.22)
+
+@configurable public constant real armorC1 = 5
+@configurable public constant real armorC2 = 1.150274 // = exp(0.14)
+
+// Printing
+public constant real message_duration = 10

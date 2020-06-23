@@ -1,0 +1,63 @@
+package Money
+
+import Players
+
+import Initialization
+import Constants
+
+public class Money
+  integer gold
+  integer lumber
+
+  construct()
+    reset()
+
+  construct(integer amount)
+    let nLumber = (amount / goldToLumber).toInt()
+
+    this.gold = amount - goldToLumber.toInt() * nLumber
+    this.lumber = nLumber
+
+  construct(integer gold, integer lumber)
+    this.gold = gold
+    this.lumber = lumber
+
+  function reset()
+    this.gold = 0
+    this.lumber = 0
+
+  function op_plus(Money i) returns Money
+    return new Money(this.gold + i.gold, this.lumber + i.lumber)
+  
+  function op_minus(Money i) returns Money
+    return new Money(this.gold - i.gold, this.lumber - i.lumber)
+
+
+// Automatically converts gold to wood and wood to gold
+
+@lateinit function initGoldToLumber()
+  let t = CreateTrigger()
+  for p in ALL_PLAYERS
+    t.registerPlayerStateEvent(p, PLAYER_STATE_RESOURCE_GOLD, GREATER_THAN_OR_EQUAL, 2. * goldToLumber)
+  
+  // If gold > 2 * goldToLumber
+  t.addAction() ->
+    print("Gold more")
+    let p = GetTriggerPlayer()
+    let nLumber = ((p.getGold() - goldToLumber) / goldToLumber).toInt()
+    p.subGold(nLumber * goldToLumber.toInt())
+    p.addLumber(nLumber)
+
+@lateinit function initLumberToGold()
+  let t = CreateTrigger()
+  for p in ALL_PLAYERS
+    t.registerPlayerStateEvent(p, PLAYER_STATE_RESOURCE_GOLD, LESS_THAN, goldToLumber)
+    
+  // If gold < goldToLumber
+  t.addAction() ->
+    let p = GetTriggerPlayer()
+
+    print("Lumber: " + p.getLumber().toString())
+    if p.getLumber() >= 1
+      p.addGold(goldToLumber.toInt())
+      p.addLumber(-1)

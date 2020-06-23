@@ -1,0 +1,48 @@
+package GenKeeps
+
+import ObjectIdGenerator
+import UnitIds
+import ObjectIds
+import LinkedList
+
+import KeepDefinition
+import GenMonsters
+import MonsterData
+import Money
+
+public constant BEGINNER_KEEP_ID   = compiletime(UNIT_ID_GEN.next())
+public constant INTERMEDIATE_KEEP_ID = compiletime(UNIT_ID_GEN.next())
+public constant ADVANCED_KEEP_ID   = compiletime(UNIT_ID_GEN.next())
+public constant EXPERT_KEEP_ID     = compiletime(UNIT_ID_GEN.next())
+
+@compiletime function generateKeeps()
+  let costIntermediate = new Money(30 * monsterData.get(9).cost.gold)
+  let costAdvanced = new Money(30 * monsterData.get(19).cost.gold)
+  let costExpert = new Money(30 * monsterData.get(29).cost.gold)
+
+  new KeepDefinition(BEGINNER_KEEP_ID, UnitIds.townhall)
+  ..setName("Beginner keep")
+  ..setUpgradesTo(INTERMEDIATE_KEEP_ID.toRawCode())
+  ..setUnitsSold(monsterIds[0].joinBy((int i) -> i.toRawCode(), ","))
+
+  new KeepDefinition(INTERMEDIATE_KEEP_ID, UnitIds.keep)
+  ..setName("Intermediate keep")
+  ..setGoldCost(costIntermediate.gold)
+  ..setLumberCost(costIntermediate.lumber)
+  ..setUpgradesTo(ADVANCED_KEEP_ID.toRawCode())
+  ..setUnitsSold(monsterIds[1].joinBy((int i) -> i.toRawCode(), ","))
+  
+  new KeepDefinition(ADVANCED_KEEP_ID, UnitIds.castle)
+  ..setName("Advanced keep")
+  ..setGoldCost(costAdvanced.gold)
+  ..setLumberCost(costAdvanced.lumber)
+  ..setUpgradesTo(EXPERT_KEEP_ID.toRawCode())
+  ..setUnitsSold(monsterIds[2].joinBy((int i) -> i.toRawCode(), ","))
+  
+  
+  new KeepDefinition(EXPERT_KEEP_ID, UnitIds.arcaneobservatory)
+  ..setName("Expert keep")
+  ..setGoldCost(costExpert.gold)
+  ..setLumberCost(costExpert.lumber)
+  ..setUpgradesTo("")
+  ..setUnitsSold(monsterIds[3].joinBy((int i) -> i.toRawCode(), ","))

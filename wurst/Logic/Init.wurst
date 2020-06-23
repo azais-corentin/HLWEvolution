@@ -1,0 +1,27 @@
+package Init
+
+import Initialization
+
+// Sets a fixed daytime
+@earlyinit function initTimeOfDay()
+  SetTimeOfDay(12)
+  SetTimeOfDayScale(0)
+
+@loadinit function initFog()
+  FogEnable(false)
+  FogMaskEnable(false)
+
+@earlyinit function initGoldBounty()
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(0))
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(1))
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(2))
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(3))
+
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(5))
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(6))
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(7))
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(8))
+
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(10))
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(11))
+  SetPlayerFlagBJ(PLAYER_STATE_GIVES_BOUNTY, true, Player(PLAYER_NEUTRAL_AGGRESSIVE))

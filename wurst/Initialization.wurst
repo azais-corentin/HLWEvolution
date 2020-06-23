@@ -12,12 +12,12 @@ import ClosureTimers
 @annotation public function lastinit()
 
 init
-    callFunctionsWithAnnotation("@loadinit")
-    // Ensures this is called after map start
-    // in case a player crashes while loading
-    nullTimer() ->
-        callFunctionsWithAnnotation("@earlyinit")
-        doAfter(0.1) ->
-            callFunctionsWithAnnotation("@lateinit")
-        doAfter(0.2) ->
-            callFunctionsWithAnnotation("@lastinit")
+  callFunctionsWithAnnotation("@loadinit")
+  // Ensures this is called after map start
+  // in case a player crashes while loading
+  nullTimer() ->
+    callFunctionsWithAnnotation("@earlyinit")
+    doAfter(0.1) ->
+      callFunctionsWithAnnotation("@lateinit")
+    doAfter(0.2) ->
+      callFunctionsWithAnnotation("@lastinit")

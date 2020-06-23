@@ -1,0 +1,21 @@
+package HeroRevive
+
+import ClosureEvents
+import ClosureTimers
+
+import Initialization
+
+@earlyinit function initHeroReviveEvents()
+  EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
+    let u = GetTriggerUnit()
+    if u.isType(UNIT_TYPE_HERO)
+      let p = GetTriggerPlayer()
+      let respawnPosition = (p.getTeam() == 0) ? gg_rct_T1Goal.getCenter() : gg_rct_T2Goal.getCenter()
+      // Death message
+      printTimed(p.getNameColored() + " has died !", 8)
+      
+      doAfter(25) ->
+        u.revive(respawnPosition, true)
+
+      CreateTimer()..start(25, null)
+      .createTimerDialog()..setTitle(p.getNameColored() + " respawn")
