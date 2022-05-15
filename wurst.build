@@ -7,3 +7,21 @@ buildMapData:
   name: HLWEvolution
   fileName: HLWEvolution
   author: Nelieru
+  scenarioData:
+    description: "New, alpha version of the classic Hero Line Wars map.\n
+                  Expect nothing but bugs, lags, missing features.\n
+                  \n
+                  Now with 4 teams!\n
+                  Source: github.com/Haellsigh/HLWEvolution"
+
+    suggestedPlayers: 2 to 16 players
+    loadingScreen:
+      model: LoadingScreen.mdx
+      #background: Generic
+      title: by Nelieru
+      subTitle: HLW Evolution
+      text: "New, alpha version of the classic Hero Line Wars map.\n
+             Expect nothing but bugs, lags, missing features.\n
+             \n
+             Now with 4 teams!\n
+             Source: github.com/Haellsigh/HLWEvolution"
