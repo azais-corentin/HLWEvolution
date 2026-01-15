@@ -1,4 +1,4 @@
-/_build
-wurst.dependencies
 .vscode
-wurst/war3map.j
+/_build
+temp/
+wurst.dependencies
