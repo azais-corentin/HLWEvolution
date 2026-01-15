@@ -17,7 +17,6 @@ buildMapData:
     suggestedPlayers: 2 to 16 players
     loadingScreen:
       model: LoadingScreen.mdx
-      #background: Generic
       title: by Nelieru
       subTitle: HLW Evolution
       text: "New, alpha version of the classic Hero Line Wars map.\n
