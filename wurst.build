@@ -1,26 +1,29 @@
 ---
 projectName: HLWEvolution
 dependencies:
-- https://github.com/wurstscript/wurstStdlib2
-- https://github.com/frotty/frentity
+  - https://github.com/wurstscript/wurstStdlib2
+  - https://github.com/frotty/frentity
 buildMapData:
   name: HLWEvolution
-  fileName: HLWEvolution
+  fileName: HLWEvolution.w3m
   author: Nelieru
   scenarioData:
-    description: "New, alpha version of the classic Hero Line Wars map.\n
-                  Expect nothing but bugs, lags, missing features.\n
-                  \n
-                  Now with 4 teams!\n
-                  Source: github.com/Haellsigh/HLWEvolution"
+    description: |
+      New, alpha version of the classic Hero Line Wars map.
+      Expect nothing but bugs, lags and missing features.
 
+      Now with 4 teams!
+
+      Source: github.com/Haellsigh/HLWEvolution
     suggestedPlayers: 2 to 16 players
     loadingScreen:
       model: LoadingScreen.mdx
       title: by Nelieru
       subTitle: HLW Evolution
-      text: "New, alpha version of the classic Hero Line Wars map.\n
-             Expect nothing but bugs, lags, missing features.\n
-             \n
-             Now with 4 teams!\n
-             Source: github.com/Haellsigh/HLWEvolution"
+      text: |
+        New, alpha version of the classic Hero Line Wars map.
+        Expect nothing but bugs, lags and missing features.
+
+        Now with 4 teams!
+
+        Source: github.com/azais-corentin/HLWEvolution
