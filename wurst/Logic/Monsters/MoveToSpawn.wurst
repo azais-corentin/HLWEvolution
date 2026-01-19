@@ -6,15 +6,20 @@ import GameRegions
 import GenMonsters
 import IncomeValues
 import CommonFunctions
-//import StringUtilities
 
-tuple regionTeamData(player owner, int teamFrom)
+class RegionTeamData
+  player owner
+  int teamFrom
 
-let keepsRegionToTeam = new HashMap<region, regionTeamData>()
-  ..put(region_T1Keeps, regionTeamData(players[19], 0))
-  ..put(region_T2Keeps, regionTeamData(players[20], 1))
-  ..put(region_T3Keeps, regionTeamData(players[21], 2))
-  ..put(region_T4Keeps, regionTeamData(players[22], 3))
+  construct(player owner, int teamFrom)
+    this.owner = owner
+    this.teamFrom = teamFrom
+
+let keepsRegionToTeam = new HashMap<region, RegionTeamData>()
+  ..put(region_T1Keeps, new RegionTeamData(players[19], 0))
+  ..put(region_T2Keeps, new RegionTeamData(players[20], 1))
+  ..put(region_T3Keeps, new RegionTeamData(players[21], 2))
+  ..put(region_T4Keeps, new RegionTeamData(players[22], 3))
 
 function onMonsterTrained()
   let u = GetEnteringUnit()

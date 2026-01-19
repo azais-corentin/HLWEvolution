@@ -34,18 +34,24 @@ enum Attribute
   Intelligence
   Level
 
-tuple attributeData(Attribute attr, int costGold)
+class AttributeData
+  Attribute attr
+  int costGold
 
-let attributeMap = new HashMap<string, attributeData>()
-  ..put("str", attributeData(Attribute.Strength, 100))
-  ..put("strength", attributeData(Attribute.Strength, 100))
-  ..put("agi", attributeData(Attribute.Agility, 100))
-  ..put("agility", attributeData(Attribute.Agility, 100))
-  ..put("int", attributeData(Attribute.Intelligence, 100))
-  ..put("intelligence", attributeData(Attribute.Intelligence, 100))
-  ..put("lvl", attributeData(Attribute.Level, 20000))
-  ..put("level", attributeData(Attribute.Level, 20000))
+  construct(Attribute attr, int costGold)
+    this.attr = attr
+    this.costGold = costGold
 
+let attributeMap = new HashMap<string, AttributeData>()
+  ..put("str", new AttributeData(Attribute.Strength, 100))
+  ..put("strength", new AttributeData(Attribute.Strength, 100))
+  ..put("agi", new AttributeData(Attribute.Agility, 100))
+  ..put("agility", new AttributeData(Attribute.Agility, 100))
+  ..put("int", new AttributeData(Attribute.Intelligence, 100))
+  ..put("intelligence", new AttributeData(Attribute.Intelligence, 100))
+  ..put("lvl", new AttributeData(Attribute.Level, 20000))
+  ..put("level", new AttributeData(Attribute.Level, 20000))  
+  
 @loadinit function initChatEvent() 
   EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
     let str = GetEventPlayerChatString()
