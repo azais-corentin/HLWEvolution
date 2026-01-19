@@ -1,5 +1,6 @@
 package MoveToSpawn
 
+import HashMap
 import Initialization
 import GameRegions
 import GenMonsters
@@ -7,27 +8,26 @@ import IncomeValues
 import CommonFunctions
 //import StringUtilities
 
+tuple regionTeamData(player owner, int teamFrom)
+
+let keepsRegionToTeam = new HashMap<region, regionTeamData>()
+  ..put(region_T1Keeps, regionTeamData(players[19], 0))
+  ..put(region_T2Keeps, regionTeamData(players[20], 1))
+  ..put(region_T3Keeps, regionTeamData(players[21], 2))
+  ..put(region_T4Keeps, regionTeamData(players[22], 3))
+
 function onMonsterTrained()
   let u = GetEnteringUnit()
   let p = u.getOwner()
   let r = GetTriggeringRegion()
-  player newOwner
-  int teamFrom
-  if r == region_T1Keeps
-    newOwner = players[19]
-    teamFrom = 0
-  else if r == region_T2Keeps
-    newOwner = players[20]
-    teamFrom = 1
-  else if r == region_T3Keeps
-    newOwner = players[21]
-    teamFrom = 2
-  else if r == region_T4Keeps
-    newOwner = players[22]
-    teamFrom = 3
-  else
+  
+  if not keepsRegionToTeam.has(r)
     Log.error("onMonsterTrained() was triggered by an unknown region")
     return
+    
+  let data = keepsRegionToTeam.get(r)
+  let newOwner = data.owner
+  let teamFrom = data.teamFrom
     
   u.setOwner(newOwner, true)
 

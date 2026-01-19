@@ -5,6 +5,9 @@ import ClosureEvents
 
 import Initialization
 
+// Maps team ID to the player index that owns that team's monsters
+let teamOwnerPlayerIds = [19, 20, 22, 23]
+
 public class Team
   int id
   int lives = 100
@@ -13,16 +16,7 @@ public class Team
 
   construct(int id)
     this.id = id
-
-    switch id
-      case 0
-        color = players[19].getColor().toColor().withAlpha(255)
-      case 1
-        color = players[20].getColor().toColor().withAlpha(255)
-      case 2
-        color = players[22].getColor().toColor().withAlpha(255)
-      case 3
-        color = players[23].getColor().toColor().withAlpha(255)
+    color = players[teamOwnerPlayerIds[id]].getColor().toColor().withAlpha(255)
 
   function isAllied(player p) returns boolean
     return p.getTeam() == id

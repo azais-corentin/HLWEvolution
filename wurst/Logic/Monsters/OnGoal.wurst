@@ -1,5 +1,6 @@
 package OnGoal
 
+import HashMap
 import Initialization
 import CommonFunctions
 import Teams
@@ -10,17 +11,15 @@ let u2 = GetUnitsInRectOfPlayer(gg_rct_T2Goal, players[20]).next()
 let u3 = GetUnitsInRectOfPlayer(gg_rct_T3Goal, players[22]).next()
 let u4 = GetUnitsInRectOfPlayer(gg_rct_T4Goal, players[23]).next()
 
+let goalUnitToTeam = new HashMap<unit, int>()
+  ..put(u1, 0)
+  ..put(u2, 1)
+  ..put(u3, 2)
+  ..put(u4, 3)
+
 function onMonsterFinished()
   let u = GetTriggerUnit()
-  int team
-  if u == u1
-    team = 0
-  else if u == u2
-    team = 1
-  else if u == u3
-    team = 2
-  else
-    team = 3
+  let team = goalUnitToTeam.get(u)
 
   let _id = u.getTypeId()
 

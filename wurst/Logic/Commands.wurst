@@ -1,5 +1,6 @@
 package Commands
 
+import HashMap
 import StringUtils
 import ClosureEvents
 import LinkedList
@@ -32,6 +33,18 @@ enum Attribute
   Agility
   Intelligence
   Level
+
+tuple attributeData(Attribute attr, int costGold)
+
+let attributeMap = new HashMap<string, attributeData>()
+  ..put("str", attributeData(Attribute.Strength, 100))
+  ..put("strength", attributeData(Attribute.Strength, 100))
+  ..put("agi", attributeData(Attribute.Agility, 100))
+  ..put("agility", attributeData(Attribute.Agility, 100))
+  ..put("int", attributeData(Attribute.Intelligence, 100))
+  ..put("intelligence", attributeData(Attribute.Intelligence, 100))
+  ..put("lvl", attributeData(Attribute.Level, 20000))
+  ..put("level", attributeData(Attribute.Level, 20000))
 
 @loadinit function initChatEvent() 
   EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
@@ -96,27 +109,14 @@ function handleCommand(string str)
       p.print("Unknown command '{0}'".format(cmd), message_duration)
 
 function buy_attribute(player p, string attributestr, string amountstr)
-  Attribute attribute
-
-  int attributeCostGold
-
   // Parse attribute
-  switch attributestr
-    case "str" | "strength"
-      attribute = Strength
-      attributeCostGold = 100
-    case "agi" | "agility"
-      attribute = Agility
-      attributeCostGold = 100
-    case "int" | "intelligence"
-      attribute = Intelligence
-      attributeCostGold = 100
-    case "lvl" | "level"
-      attribute = Level
-      attributeCostGold = 20000
-    default
-      p.print("Unknown attribute {0}".format(attributestr), message_duration)
-      return
+  if not attributeMap.has(attributestr)
+    p.print("Unknown attribute {0}".format(attributestr), message_duration)
+    return
+  
+  let attrData = attributeMap.get(attributestr)
+  let attribute = attrData.attr
+  let attributeCostGold = attrData.costGold
   let attributeCostLumber = attributeCostGold / goldToLumber
 
   // Parse amount
