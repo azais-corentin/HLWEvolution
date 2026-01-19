@@ -86,7 +86,7 @@ function CreateBuildingsForPlayer19 takes nothing returns nothing
     local trigger t
     local real life
 
-    set u = BlzCreateUnitWithSkin( p, 'n000', 2944.0, 7040.0, 270.000, 'n000' )
+    set u = BlzCreateUnitWithSkin( p, 'n000', 2624.0, 6592.0, 270.000, 'n000' )
 endfunction
 
 //===========================================================================
