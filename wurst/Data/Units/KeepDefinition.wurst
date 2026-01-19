@@ -7,6 +7,7 @@ constant string goldColor = compiletime(COLOR_GOLD.toColorString())
 public class KeepDefinition extends BuildingDefinition
   construct(int newId, int origId)
     super(newId, origId)
+
     // Reset defaults
     setNormalAbilities("")
     setUpgradesUsed("")
