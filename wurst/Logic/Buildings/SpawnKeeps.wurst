@@ -17,8 +17,14 @@ constant rect array keepRect = [gg_rct_Keep1, gg_rct_Keep2, gg_rct_Keep3, gg_rct
     let p = u.getOwner()
     let typeid = u.getTypeId()
     let pos = u.getPos()
+
+    let isSelected = IsUnitSelected(u, p)
+
     u.remove()
-    createUnit(p, typeid, pos, angle(0))
+    let newUnit = createUnit(p, typeid, pos, angle(0))
+
+    if isSelected
+      p.selectSingle(newUnit)
 
 @lateinit function spawnKeeps()
   for i = 0 to 15
